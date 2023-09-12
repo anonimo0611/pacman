@@ -1,0 +1,345 @@
+#cfg, #cfgPanel, #keys {
+	font-family: sans-serif;
+	font-weight: 400;
+}
+
+/*--- Panel ---*/
+.panel {
+	top: 10.3rem;
+	right: 0;
+}
+.panel table {
+	border-collapse: collapse;
+}
+.panel caption {
+	text-align: center;
+	color: #e5ec34;
+	font-size: 100%;
+	font-weight: 700;
+	margin: .2em 0 .2em .4rem;
+	padding: 0;
+}
+.panel th,
+.panel td {
+	font: 1em/1.1 sans-serif;
+	padding: .1rem .2rem;
+	vertical-align: middle;
+}
+.panel th {
+	color: #6cf4e6;
+	font-weight: normal;
+}
+.panel td {
+	text-align: center;
+}
+.panel tr:hover th {
+	color: #eab6fa;
+}
+.panel tr:hover th + td {
+	background-color: rgba(27,83,143,.6);
+}
+
+/*--- Main config ---*/
+#cfg {
+	background: rgba(0,0,0,.75);
+	border: solid red 1px;
+	border-style: solid none;
+	margin: auto;
+	padding: .2em 0;
+	width: 100%;
+	position: absolute;
+	z-index: 10000;
+	top: 6.7rem;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+#cfg > * {
+	margin: 0 .2em;
+	align-self: center;
+}
+/* Checkboxes */
+#cfg .checkboxes {
+	color: #6cf4e6;
+	font-size: 70%;
+}
+#cfg .checkboxes li {
+	margin: .3em 0;
+	display: flex;
+	align-items: center;
+}
+#cfg .checkboxes label {
+	margin-left: .3em;
+	display: block;
+}
+#cfg .checkboxes label:hover {
+	color: #eab6fa;
+}
+/* Buttons */
+#cfg button {
+	font-size: 100%;
+	line-height: 1;
+	margin: .1rem 0 .1rem .1rem;
+	padding: .3em .2em;
+	top: .25em;
+	transition: color .3s;
+}
+#cfg .buttons {
+	font-size: 70%;
+	padding: 0;
+}
+#cfg .buttons button {
+	display: block;
+	width: 100%;
+}
+#cfgBtn {
+	background: var(--bc) url(../res/burger.svg) center/120%;
+}
+/* Size Buttons */
+#size {
+	margin: 0 0 0 .3em
+}
+#size.toFit [title^=Restore],
+#size.toRestore [title^=Fit] {
+	position: absolute;
+	top: -1000px;
+}
+#size button, #cfgBtn {
+	text-indent: -20em;
+	font-size: .96rem;
+	line-height: 0;
+	margin: 0;
+	padding: 0;
+	width:  1rem;
+	height: 1rem;
+	overflow: hidden;
+	outline: 0;
+}
+#size button {
+	background: var(--bc) center/90% no-repeat;
+}
+#size button[title^=Fit] {
+	background-image: url(../res/maximize.svg);
+}
+#size button[title^=Restore] {
+	background-image: url(../res/restore.svg);
+}
+
+/*--- Config panel ---*/
+#cfgPanel {
+	line-height: 1;
+	padding: 0 .2em;
+}
+#cfgPanel label {
+	width: 100%;
+}
+#cfgPanel td {
+	padding: .05em 0;
+	position: relative;
+}
+#cfgPanel td:first-child {
+	text-align: center;
+	color: #fff;
+	width: 1.5rem;
+}
+#cfgPanel td:first-child ~ td {
+	text-align: left;
+	color: #6cf4e6;
+}
+#cfgPanel tr:hover td + td {
+	color: #eab6fa;
+}
+#cfgPanel tr:last-child td {
+	padding-bottom: .1em;
+}
+
+#cfgPanel .buttons li {
+	text-align: center;
+	padding: .2em 0 .1em
+}
+#cfgPanel .buttons button {
+	font-size: .8rem;
+	line-height: 1;
+	padding: .2em 0;
+	border-radius: .2em;
+	width: 100%;
+}
+#cfgPanel #defBtn {
+	border-width: 3px;
+}
+#cfgPanel [for=unrChk] {
+	display: inline-block;
+	transform: scale(.9,1);
+	transform-origin: 0 0;
+}
+#cfgPanel [type=range] {
+	line-height: 0;
+	width: calc(4.8em);
+	position: absolute;
+	top: calc(50% - 2px);
+	right: 0;
+	transform: translateY(-50%) scale(.8);
+	transform-origin: 0 right;
+}
+
+/*--- Config Information ---*/
+.info {
+	text-transform: uppercase;
+	color: #666;
+	background: rgba(0,0,0,.3);
+	font: bold 1rem/1 Verdana,sans-serif;
+	position: absolute;
+	z-index: 900;
+	opacity: 0;
+	transform: scale(.65);
+	transition: opacity .1s;
+}
+.info.l {
+	top: 17.2rem;
+	left:  .2em;
+	transform-origin: 0 0;
+}
+.info.r {
+	top: 17.7rem;
+	right: .3em;
+	transform-origin: right 0;
+}
+.info [data-enabled=true] {
+	color: #fc9cef;
+}
+.info li {
+	transition: color .2s
+}
+.info li::first-letter {
+	font-size: 130%;
+}
+.info span {
+	display: inline-block;
+	transform: scale(1.1,.9);
+}
+.info .by {
+	text-transform: lowercase;
+	margin-right: .3em;
+}
+.info #spdRate {
+	font-size: 120%;
+}
+
+.wf-atari .hypen {
+	font: 1rem Digit;
+	vertical-align: middle;
+}
+.wf-atari .info {
+	font: 1rem/1.15 Atari,monospace;
+	transform: scale(.46,.62);
+}
+.wf-atari .info.r {
+	right: .2em;
+}
+.wf-atari #spdRate {
+	letter-spacing: -.25em;
+}
+
+/*--- Keyboard controls ---*/
+#aboutKeyBtn {
+	cursor: help;
+}
+#keysPanel {
+	padding: 0 .2em 0;
+}
+#keysPanel kbd {
+	text-align: center;
+	font: 100%/1 Consolas,monospace;
+	display: inline-block;
+}
+#keysPanel kbd.↑,
+#keysPanel kbd.↓ {
+	width:  1em;
+	height: 1em;
+}
+#keysPanel kbd.↑ {
+	margin-left: -0.2em;
+	vertical-align: super;
+}
+#keysPanel kbd.↓ {
+	margin-left: -1.0em;
+	vertical-align: sub;
+}
+#keysPanel kbd.→ {
+	margin-left: -0.2em;
+}
+
+/*--- Volume controller ---*/
+#volCtrl {
+	white-space: nowrap;
+	width:  calc(1.7rem + 15px);
+	height: 2rem;
+	position: absolute;
+	z-index: 20000;
+	top:  -.8rem;
+	right: .1rem;
+}
+#volCtrl:hover input {
+	visibility: visible;
+	opacity: 1;
+	transition: .2s opacity .3s;
+}
+.volCtrl:not(.show) {
+	display: none
+}
+.volCtrlWrapper {
+	width: 8px;
+	height: 125%;
+}
+.volCtrlWrapper label {
+	display: block;
+	height: 100%;
+}
+.volCtrlWrapper input {
+	background: #0b93d5;
+	width: 2em;
+	position: relative;
+	z-index: 10000;
+	left:   0;
+	bottom: 0;
+	visibility: hidden;
+	opacity: 0;
+	outline: 0;
+	transform: translate(-.1em,1rem) scale(.8) rotate(-90deg);
+	transform-origin: center;
+}
+
+/*--- Menus ---*/
+#LevelMenuLabel {
+	font-size: .8rem;
+}
+#LevelMenu {
+	text-transform: uppercase;
+	font: .9rem/1 sans-serif;
+}
+#LevelMenu .current,
+#LevelMenu menu > li {
+	padding: .22em .9em .2em .2em;
+	display: flex;
+	align-items: center;
+	gap: .2em;
+}
+#LevelMenu menu > li {
+	padding-top: .15em;
+	padding-bottom: .15em
+}
+#LevelMenu  .current::before,
+#LevelMenu menu > li::before {
+	content: '';
+	background: no-repeat
+		calc(-20px*var(--o,0)) calc(-20px * 3)/260px 80px var(--bg);
+	width:  20px;
+	height: 20px;
+	position: relative;
+	top: -1px;
+}
+#ExtendScoreMenu {
+	line-height: 1;
+	margin-right: .2em;
+	vertical-align: baseline;
+}

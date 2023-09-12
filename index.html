@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en" data-size="viewport">
+<head>
+	<meta charset="UTF-8">
+	<title>PAC-MAN</title>
+	<link rel="icon" href="data:,">
+	<link rel="preload" as="image" type="image/png"     href="res/maze.png">
+	<link rel="preload" as="image" type="image/png"     href="res/sprite.png">
+	<link rel="preload" as="image" type="image/png"     href="res/grid.png">
+	<link rel="preload" as="image" type="image/svg+xml" href="res/burger.svg">
+	<link rel="preload" as="image" type="image/svg+xml" href="res/caret.svg">
+	<link rel="preload" as="image" type="image/svg+xml" href="res/maximize.svg">
+	<link rel="preload" as="image" type="image/svg+xml" href="res/restore.svg">
+	<link rel="preload" as="font"  type="font/woff2"    href="res/Atari.woff2" crossorigin>
+	<link rel="preload" as="font"  type="font/woff2"    href="res/PacfontGood.woff2" crossorigin>
+	<link rel="preload" as="font"  type="font/woff2"    href="res/EnigmaDigit.woff2" crossorigin>
+	<link rel="stylesheet" href="styles/index.css">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/webfont/1.6.28/webfontloader.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.slim.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/SoundJS/1.0.2/soundjs.min.js"></script>
+	<style>
+	@font-face {font-family:Atari;  src:url(res/Atari.woff2)       format('woff2')}
+	@font-face {font-family:Digit;  src:url(res/EnigmaDigit.woff2) format('woff2')}
+	@font-face {font-family:Pacfont;src:url(res/PacfontGood.woff2) format('woff2')}
+	</style>
+	<script>
+	WebFont.load({custom:{families:['Atari']},fontactive:_=>$(':root').addClass('wf-atari')})
+	createjs.deprecate = method=> function(){return method && method.apply(this,arguments)}
+	</script>
+	<script src="lib/util.js"></script>
+	<script src="lib/extjq.js"></script>
+	<script src="src/elems.js" defer></script>
+	<script src="src/main.js" type="module"></script>
+</head>
+
+<body>
+
+<div id="debug" style="position:fixed;top:.5em;left:.5em;white-space:pre"></div>
+
+<form onsubmit="return false">
+	<div id="loading">Now Loading<span class="dots">...</span></div>
+	<div id="board" class="ready title"
+	data-door="close"
+	data-grid="false"
+	data-loaded="false"
+	data-paused="false"
+	data-frozen="false">
+		<div id="boardHeader">
+			<dl>
+				<dt id="oneUP">1UP</dt>
+				<dd class="score"><output id="score">00</output></dd>
+			</dl>
+			<dl id="hiscoreContainer">
+				<dt id="hiscoreLabel">HIGH</dt>
+				<dd class="score"><output id="hiscore">00</output></dd>
+			</dl>
+		</div>
+		<div id="maze">
+			<h1 class="to_be_flash">PAC<span class="hypen">-</span>MAN</h1>
+			<div id="level" class="to_be_flash">Level <output id="levelNum">01</output></div>
+			<output id="message" class="message">GAME　　OVER</output>
+			<ul id="ready">
+				<li class="player1">PLAYER　ONE</li>
+				<li class="message">READY!</li>
+			</ul>
+			<div id="info" class="to_be_flash">
+				<ul class="info l">
+					<li id="spdInfo">Speed <span class="by">x</span><output id="spdRate">1.0</output></li>
+					<li id="invInfo">Invincible</li>
+					<li id="trgInfo">Targets</li>
+				</ul>
+				<ul class="info r">
+					<li id="unrInfo">Un<span class="hypen">-</span><br>restricted</li>
+				</ul>
+			</div>
+			<div id="fruit" class="fruit"></div>
+			<script>$(fruit).on('transitionend',function(){this.hidden = this.style.opacity == 0})</script>
+			<canvas class="Pacman" id="lost" width="70" height="70"></canvas>
+		</div>
+		<div id="boardFooter">
+			<div id="lives"></div>
+			<div id="fruits"></div>
+		</div>
+		<div id="targetTiles">
+			<div id="trg-Circle" data-inside="false"></div>
+			<div id="trg-Akabei" class="tile"></div>
+			<div id="trg-Pinky"  class="tile"></div>
+			<div id="trg-Aosuke" class="tile"></div>
+			<div id="trg-Guzuta" class="tile"></div>
+		</div>
+		<div id="volCtrl" class="volCtrl">
+			<label id="speaker" for="volRg2" style="--w:1" title="Mute On/Off (M)">Volume:</label>
+			<span class="volCtrlWrapper">
+				<input type="range" class="volRng" id="volRg2" data-orient="vertical"
+					data-links="volRng" tabindex="-1" value="10" step="1" min="0" max="10">
+			</span>
+		</div>
+		<div id="titleScr">
+			<div id="cfg">
+				<label id="LevelMenuLabel">LEVEL</label>
+				<div class="dropdown menu" id="LevelMenu">
+					<output class="current menu-focusable" tabindex="0">01 Beginner</output>
+					<menu class="dropdown-list">
+					<li data-val="0" class="selected">01 Beginner</li>
+					<li data-val="1">02 </li>
+					<li data-val="2">03 Very Easy</li>
+					<li data-val="2">04 </li>
+					<li data-val="3">05 Easy</li>
+					<li data-val="3">06 </li>
+					<li data-val="4">07 Normal</li>
+					<li data-val="4">08 </li>
+					<li data-val="5">09 Hard</li>
+					<li data-val="5">10 </li>
+					<li data-val="6">11 Very Hard</li>
+					<li data-val="6">12 </li>
+					<li data-val="7">13 Expert</li>
+					</menu>
+				</div>
+				<ul class="checkboxes">
+					<li><label><input type="checkbox" id="powChk" class="setInf" checked="checked"> Power cookies</label></li>
+					<li><label><input type="checkbox" id="onlChk" class="setInf"> Only this level</label></li>
+					<li><label><input type="checkbox" id="chsChk" class="setInf"> Always chase</label></li>
+				</ul>
+				<ul class="buttons">
+					<li><button type="button" id="clearStorageBtn">Clear Storage</button></li>
+					<li><button type="button" id="keyBtn" class="keyPanel">About Keys</button></li>
+				</ul>
+				<div id="size" class="toRestore">
+					<button type="button" title="Fit to viewport">Fit</button>
+					<button type="button" title="Restore actual size">Restore</button>
+				</div>
+				<button type="button" id="cfgBtn" class="cfgPanel" title="More configuration">More configuration...</button>
+			</div>
+			<div id="cfgPanel" class="cfgPanel panel">
+				<table>
+				<caption>Configuration</caption>
+				<tr class="volCtrl">
+					<td><output for="volRng volRg2">10</output></td>
+					<td><label>Volume:<input type="range"
+						class="range volRng" id="volRng" data-links="volRg2" value="10" step="1" min="0" max="10"></label>
+					</td>
+				</tr>
+				<tr>
+					<td><output for="spdRng">1</output></td>
+					<td><label>Speed:<input type="range"
+						class="range setInf" id="spdRng" value="1" step="0.1" min="0.5" max="1.2"></label>
+					</td>
+				</tr>
+				<tr>
+					<td><output for="lvsRng">3</output></td>
+					<td><label class="lvsRng">PacLives:<input type="range"
+						class="range lvsRng" id="lvsRng" value="3" step="1" min="1" max="5"></label>
+					</td>
+				</tr>
+				<tr>
+					<td></td>
+					<td>
+					<div class="slidemenu-wrapper"><label>Extend:</label>
+						<div class="slidemenu menu menu-focusable range" id="ExtendScoreMenu" tabindex="0">
+							<menu class="slidemenu-list">
+						  <li data-val="-1">None</li>
+						  <li data-val="10000" class="selected">10,000<small>PTS</small></li>
+						  <li data-val="15000">15,000<small>PTS</small></li>
+						  <li data-val="20000">20,000<small>PTS</small></li>
+							</menu>
+						</div>
+					</div>
+					</td>
+				</tr>
+				<tr>
+					<td><input type="checkbox" id="invChk" class="setInf"></td>
+					<td><label for="invChk">Invincible</label></td>
+				</tr>
+				<tr>
+					<td><input type="checkbox" id="unrChk" class="setInf"></td>
+					<td><label for="unrChk">Unrestricted ghosts</label></td>
+				</tr>
+				<tr>
+					<td><input type="checkbox" id="trgChk" class="setInf"></td>
+					<td><label for="trgChk">Show targets</label></td>
+				</tr>
+				<tr>
+					<td><input type="checkbox" id="grdChk" class="setInf"></td>
+					<td><label for="grdChk">Show tile grid</label></td>
+				</tr>
+				<tr>
+					<td colspan="2" class="btn">
+					<ul class="buttons">
+						<li><button class="cutscn" value="0">Attract Demo</button></li>
+						<li><button class="cutscn" value="1">Coffee Break 1</button></li>
+						<li><button class="cutscn" value="2">Coffee Break 2</button></li>
+						<li><button class="cutscn" value="3">Coffee Break 3</button></li>
+						<li><button id="defBtn">Return to Default</button></li>
+					</ul>
+					</td>
+				</tr>
+				</table>
+			</div>
+			<div id="keysPanel" class="keyPanel panel">
+				<table>
+				<caption>Keys</caption>
+				<tr class="volCtrl">
+					<th>Mute</th>
+					<td><kbd>M</kbd></td>
+				</tr>
+				<tr>
+					<th>Pause</th>
+					<td><kbd>ESC</kbd></td>
+				</tr>
+				<tr>
+					<th>Quit</th>
+					<td><kbd>DEL</kbd></td>
+				</tr>
+				<tr>
+					<th>Reset</th>
+					<td><kbd>CTRL</kbd>+<kbd>DEL</kbd></td>
+				</tr>
+				<tr>
+					<th>Move</th>
+					<td><span class="arrows"><kbd class="←">←</kbd><kbd class="↑">↑</kbd><kbd
+						class="↓">↓</kbd><kbd class="→">→</kbd></span> or <kbd>AWSD</kbd></td>
+				</tr>
+				</table>
+			</div>
+			<button type="button" id="startBtn">PRESS ARROWS to START!!</button>
+		</div>
+		<div id="CB"></div>
+	</div>
+</form>
+<div id="overlay"></div>
+<template id="demo_temp">
+	<div id="demo" class="standbyAnim">
+		<table id="characters">
+		<thead>
+		<tr>
+			<th colspan="3">CHARACTER　/　NICKNAME</th>
+		</tr>
+		</thead>
+		<tbody>
+		<tr class="Akabei">
+			<td class="Akabei ghs demo" data-orient="Right"></td>
+			<td class="ghs-chara">OIKAKE</td>
+			<td class="ghs-name">AKABEI</td>
+		</tr>
+		<tr class="Pinky">
+			<td class="Pinky ghs demo" data-orient="Right"></td>
+			<td class="ghs-chara">MACHIBUSE</td>
+			<td class="ghs-name">PINKY</td>
+		</tr>
+		<tr class="Aosuke">
+			<td class="Aosuke ghs demo" data-orient="Right"></td>
+			<td class="ghs-chara">KIMAGURE</td>
+			<td class="ghs-name">AOSUKE</td>
+		</tr>
+		<tr class="Guzuta">
+			<td class="Guzuta ghs demo" data-orient="Right"></td>
+			<td class="ghs-chara">OTOBOKE</td>
+			<td class="ghs-name">GUZUTA</td>
+		</tr>
+		</tbody>
+		</table>
+		<div id="demoAnim">
+	    <div id="demoAct">
+        <div class="pow" data-dot="pow"></div>
+        <div id="Pacman" class="actor Pacman"></div>
+        <div id="Akabei" class="ghs actor Akabei" data-orient="Left"></div>
+        <div id="Pinky"  class="ghs actor Pinky"  data-orient="Left"></div>
+        <div id="Aosuke" class="ghs actor Aosuke" data-orient="Left"></div>
+        <div id="Guzuta" class="ghs actor Guzuta" data-orient="Left"></div>
+	    </div>
+		</div>
+		<div class="bonusGuide">
+			<ul>
+				<li class="dot">
+					<span data-dot="normal"></span>
+					<span class="pts">10<small>PTS</small></span>
+				</li>
+				<li class="pow">
+					<span data-dot="pow"></span>
+					<span class="pts">50<small>PTS</small></span>
+				</li>
+			</ul>
+			<div class="aboutExtend">BONUS　PACMAN　FOR　<span class="extendScore"></span><small>PTS</small></div>
+		</div>
+	</div>
+</template>
+<template id="coffeeBreak_temp">
+  <div id="Pacman" class="actor Pacman"></div>
+  <div id="Akabei" class="actor Akabei ghs" data-orient="Left"></div>
+</template>
+<template id="confirm_temp">
+	<dialog style="opacity:0" id="confirm">
+		<div class="content"></div>
+		<div class="buttons">
+			<button type="button">OK</button><button type="button">Cancel</button>
+		</div>
+	</dialog>
+</template>
+
+</body>
+</html>

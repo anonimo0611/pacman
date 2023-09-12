@@ -1,0 +1,365 @@
+div {
+	--bg: url(../res/sprite.png);
+	background-repeat: no-repeat !important;
+}
+.actor, .actor::before, .actor::after, .pts, .tile, .info {
+	will-change: animation,background,opacity,transform,width,z-index;
+	overflow: hidden;
+}
+
+/*--- Negative offsets ---*/
+#maze .actor, #lost {position: absolute;}
+#maze .Pacman {top: -09px;left: -09px;}
+#maze .ghs    {top: -12px;left: -11px;}
+#maze #fruit  {top: -10px;left: -08px;}
+
+/*--- Fruit ---*/
+#fruit, #fruits div {
+	background: calc(-36px*var(--o)) calc(-36px*3)/468px 144px var(--bg);
+	width:  36px;
+	height: 36px;
+	z-index: 1000;
+	overflow: hidden;
+}
+#fruit[hidden] {
+	display: block;
+}
+#fruits div {
+	margin: 0 2px;
+}
+
+/*--- Life, Speaker ---*/
+#lives div {
+	width:  1.5rem;
+	height: 1.5rem;
+	transform: scale(1.1);
+}
+#speaker {
+	text-indent: -100em;
+	width:  1.5rem;
+	height: 1.5rem;
+	position: absolute;
+	top: .8rem;
+	right: 0;
+	overflow: hidden;
+	transform: scale(.95);
+}
+#lives div,
+#speaker::before {
+	background: -1.5rem 0/390px 120px var(--bg);
+	font-size: 1.5rem;
+	line-height: 1;
+	margin: 0 .5rem 0 0;
+	display: inline-block;
+}
+#speaker::before {
+	content: '';
+	background-position: calc(-1.5rem*8) calc(-1.5rem*3);
+	width:  calc(1.5rem*4);
+	height: 1.5rem;
+	position: absolute;
+	left: 0;
+	transform: translateX(calc(-1.5rem*var(--w)));
+	cursor: pointer;
+}
+
+/*--- Pacman ---*/
+.Pacman {
+	width:  38px;
+	height: 38px;
+	z-index: 1002;
+	overflow: hidden;
+	transition: unset;
+}
+.Pacman::before {
+	content: '';
+	background: 0 0/494px 152px var(--bg);
+	width:  calc(38px*4);
+	height: 38px;
+	position: absolute;
+	top:  0;
+	left: 0;
+}
+/* Lost life */
+body:not(#LostLife) #lost {
+	transform: translate(-1000px,-1000px) !important;
+}
+#LostLife #Pacman:not(.prep).lost::before {
+	opacity: 0;
+	transition: unset;
+}
+/* Center point */
+[data-grid=true] #Pacman:not(.lost)::after {
+	content: '';
+	background: lime;
+	border-radius: 100%;
+	width:  4px;
+	height: 4px;
+	position: absolute;
+	top:  50%;
+	left: 50%;
+	transform: translate(-50%,-50%);
+}
+/* Animation */
+@keyframes Pacman {
+	to {transform: translate3d(-100%,0,0);}
+}
+.Pacman::before {
+	animation: Pacman 300ms steps(4) infinite;
+}
+.Pacman[data-stopped=true]::before {
+	animation-timing-function: steps(3,jump-both);
+	animation-play-state: paused;
+}
+body:not(#Playing):not(.Demo) .Pacman::before {
+	animation: none;
+}
+
+/*--- Ghosts ---*/
+.ghs {
+	width:  42px;
+	height: 42px;
+	z-index: 1005;
+	overflow: hidden;
+}
+.ghs::before,
+.ghs::after {
+	content: '';
+	background: 0 calc(-42px*2)/546px 168px var(--bg);
+	width:  calc(42px*2);
+	height: 42px;
+	position: absolute;
+	top: 0;left: 0;
+}
+.ghs.Pinky::before  {background-position-x: calc(-42px*3);}
+.ghs.Aosuke::before {background-position-x: calc(-42px*5);}
+.ghs.Guzuta::before {background-position-x: calc(-42px*7);}
+
+/* Stack level */
+.ghs.toHouse {z-index: 1012;}
+.ghs.Akabei  {z-index: 1010;}
+.ghs.Pinky	 {z-index: 1008;}
+.ghs.Aosuke  {z-index: 1006;}
+.ghs.Guzuta  {z-index: 1004;}
+.ghs.fright  {z-index: 1001;}
+
+/* Eyes */
+.ghs::after {
+	background-position-y: -42px;
+	width: calc(42px*4);
+}
+.ghs[data-orient=Right]::after {transform: translateX(-42px);}
+.ghs[data-orient=Down]::after  {transform: translateX(calc(-42px*2));}
+.ghs[data-orient=Left]::after  {transform: translateX(calc(-42px*3));}
+
+/* Angry Akabei */
+.ghs.Akabei {
+	filter:
+		drop-shadow(+1px +1px 30px transparent)
+		drop-shadow(-1px -1px 30px transparent);
+}
+.ghs.Akabei[data-angry=true]:not(.fright):not(.toHouse) {
+	filter:
+		drop-shadow(+1px +1px 30px red)
+		drop-shadow(-1px -1px 30px red);
+}
+
+/* Animation: normal */
+@keyframes Ghost {
+	to {transform: translate3d(-100%,0,0);}
+}
+.ghs.actor::before,
+.ghs.repaired::after {
+	animation: Ghost calc(216ms/var(--spd,1)) steps(2) infinite;
+}
+
+/* Animation: frightened */
+@keyframes fright-flash {
+	to {transform: translate3d(-100%,0,0);}
+}
+.ghs.fright::before {
+	background-position: calc(-42px*11) calc(-42px*2) !important;
+}
+.ghs.fright.flash::before {
+	background-position-x: calc(-42px*9) !important;
+	width: calc(42px*4);
+	animation: fright-flash calc(430ms/var(--spd,1)) steps(4,jump-end) 4.5;
+}
+[data-fright-time="1000"] .ghs.fright.flash::before {
+	animation-iteration-count: 2.5;
+}
+
+/*--- Paused ---*/
+[data-frozen=true] .actor::before,
+[data-paused=true] .actor::before,
+[data-paused=true] .actor::after,
+body:not(#Playing) #maze .actor:not(.lost)::before {
+	animation-play-state: paused !important;
+}
+[data-paused=true] #fruit,
+[data-paused=true] .pts.pts_fruit {
+	opacity: 0 !important;
+	transition: unset !important;
+}
+
+/*--- Opacity and Transition ---*/
+.ghs::before {
+	transition: opacity calc(1s/var(--spd,1)) calc(50ms/var(--spd,1));
+}
+.ghs.fright::after,
+.ghs.bared::after,
+.ghs.toHouse::before {
+	opacity: 0;
+	transition: unset;
+}
+[data-cheats=true] .Pacman,
+[data-grid=true]   .Pacman,
+[data-grid=true]   .ghs:not(.demo):not(.bitten) {
+	opacity: .75;
+}
+[data-frozen=true] .Pacman,
+[data-frozen=true] .ghs.bitten::before,
+[data-frozen=true] .ghs.bitten::after {
+	opacity: 0 !important;
+	animation-play-state: paused;
+	transition: unset;
+}
+
+#Ready .Pacman,
+#Ready .ghs {
+	transition: opacity .6s;
+}
+#Ready .start .Pacman,
+#Ready .start .ghs {
+	opacity: 0;
+	transition: unset;
+}
+#board.respawn .actor {
+	opacity: 0;
+}
+#LostLife .ghs,
+#LostLife #fruit{
+	opacity: 0;
+	transition: opacity .4s .3s;
+}
+#AteAll .ghs,
+#AteAll #fruit {
+	opacity: 0;
+	transition: opacity 1s;
+}
+#Title #fruit {
+	transition: unset !important;
+}
+
+/*--- Target Tiles ---*/
+#targetTiles > [id] {
+	display: block;
+	position: absolute;
+	top: -.4rem;
+	left: 0;
+	transform: translate(-1000px,-1000px);
+	opacity: 1;
+	will-change: opacity;
+}
+#targetTiles .tile {
+	width:  1rem;
+	height: 1rem;
+	border: solid 1px white;
+	border-radius: .2em;
+}
+#trg-Akabei {background: #c00;}
+#trg-Pinky  {background: #f9c;}
+#trg-Aosuke {background: #09c;}
+#trg-Guzuta {background: #f90;}
+
+#trg-Circle {
+	border: 4px solid;
+	border-radius: 100%;
+	--s: calc(16rem + 2px);
+	width:  var(--s);
+	height: var(--s);
+	z-index: 2200;
+}
+#trg-Circle[data-inside=true] {
+	border-color: rgba(255,183,76,.4)
+}
+#trg-Circle[data-inside=false] {
+	border-color: rgba(255,183,76,.8)
+}
+
+body:not(#Playing) #targetTiles,
+#board:not([data-cheats=true]) #targetTiles {
+	display: none;
+	transform: translate(-1000px,-1000px);
+}
+
+/*--- Coffee break ---*/
+#CB div {
+	position: absolute;
+	top:  0;
+	left: 0;
+}
+#CB #Pacman[data-dir=Right] {
+	top: -5px;
+}
+#CB #Akabei, #cloth, #stake {
+	width:  42px;
+	height: 42px;
+	position: absolute;
+	left: 0;
+	overflow: hidden;
+	will-change: opacity;
+}
+
+/* Scene2 */
+#stake {top: -4px;--o: 8;}
+#cloth {top: -4px;--o: 9;opacity: 0;}
+#cloth::before {
+	content: '';
+	width:  calc(42px*4);
+	height: 42px;
+	position: absolute;
+	z-index: 2000;
+	transform: translateX(calc(-42px*var(--n)));
+}
+#stake, #cloth::before {
+	background: calc(-42px*var(--o)) -42px/546px 168px var(--bg);
+}
+
+.ghs.clothesGotCaught::before {
+	animation-duration: 250ms;
+}
+.ghs.ripped {
+	left: -6px !important;
+}
+.ghs.ripped::before {
+	background-position-x: calc(-42px*2);
+	animation: none;
+}
+.ghs.ripped::after {
+	background-position-x: calc(-42px*4);
+	transform: translateX(0);
+}
+.ghs.ripped.last::after {
+	transform: translateX(-42px);
+}
+.ghs:not(.ripped).stopped::before {
+	background-position-x: -42px;
+	animation: none;
+}
+/* Scene3 */
+.ghs.repaired::after {
+	background-position-x: calc(-42px*6);
+	width: calc(42px*2);
+	transform: translateX(0);
+}
+.ghs.bared {
+	width:  calc(42px*1.5) !important;
+	height: 42px;
+}
+.ghs.bared::before {
+	background-position: calc(-42px*4) 0;
+	width: 126px;
+	height: 42px;
+	animation: Ghost .24s steps(2) infinite;
+}

@@ -1,0 +1,180 @@
+#demo, #CB {
+	width:  100%;
+	height: 100%;
+	position: absolute;
+	z-index: 10000;
+	top: 0;left: 0;
+	clip-path: inset(0);
+}
+#CB:empty {
+	display: none;
+}
+.Demo #maze,
+.Demo #lives,
+.CB   #boardHeader,
+.CB .title #boardFooter {
+	visibility: hidden;
+}
+
+/*--- Default opacity ---*/
+.Demo thead,
+.Demo td,
+.Demo .bonusGuide {
+	opacity: 0;
+	will-change: opacity;
+}
+#demo .actor,
+#CB   .actor {
+	opacity: 1;
+}
+
+/*--- Character / Nickname ---*/
+.Demo table {
+	margin: 3.5em 0 0 3em;
+}
+.Demo tbody {
+	position: relative;
+	top:  -.62em;
+	left: -.15em;
+}
+.Demo th {
+	font-weight: 400;
+	padding-left: 2.9em;
+}
+.Demo td {
+	line-height: 1;
+	border-top:    solid .61em transparent;
+	border-bottom: solid .20em transparent;
+	padding: 0;
+	position: relative;
+	z-index: 100 !important;
+}
+.Akabei td {color: #e00;}
+.Pinky  td {color: #f9b;}
+.Aosuke td {color: #0cf;}
+.Guzuta td {color: #fb0;}
+
+/* Ghost sprite cell */
+td.ghs {
+	top: .24em;
+}
+td.ghs ~ td {
+	position: relative;
+	top: .3em;
+	vertical-align: middle;
+}
+/* Character cell */
+td.ghs-chara {
+	white-space: nowrap;
+	padding-left: 1.9em;
+	z-index: 100;
+}
+.Akabei   td.ghs-chara::after {content: '- - - - -';}
+.Pinky    td.ghs-chara::after {content: '- -';}
+.Aosuke   td.ghs-chara::after {content: '- - -';}
+.Guzuta   td.ghs-chara::after {content: '- - - -';}
+.wf-atari td.ghs-chara::after {
+	font: 28px/1 Digit,sans-serif;
+	display: inline-block;
+	vertical-align: -2px;
+}
+/* Nickname cell */
+td.ghs-name {
+	quotes: '"' '"';
+}
+td.ghs-name::before {
+	content: open-quote;
+	margin-left: 0;
+}
+td.ghs-name::after {
+	content: close-quote;
+}
+
+/*--- Set absolute position ---*/
+#demo ul,
+#demo li::before,
+#demoAnim,
+#demoAct,
+#demoAct div {
+	position: absolute;
+}
+
+/*--- Cookie points ---*/
+#demo ul {
+	padding: 0;
+	top:  21.5em;
+	left: 11.0em;
+	display: table;
+}
+#demo li {
+	line-height: 1;
+	display: flex;
+	align-items: center;
+	position: relative;
+}
+#demo li + li {
+	margin-top: 1em;
+}
+#demo li > [data-dot] {
+	width:  1rem;
+	height: 1rem;
+	margin-right: 1em;
+}
+#demo li > .pts {
+	transform: translate(.05em, .1em);
+}
+#demo li > .pts small {
+	font-size: 50%;
+	margin-left: .5em;
+}
+
+/*-- Demonstration --*/
+#demoAnim {
+	font-size: 1rem;
+	line-height: 1;
+	height: 4em;
+	z-index: 1000;
+	top: 18em;
+	left: 3em;
+	will-change: opacity;
+}
+#demoAct {
+	margin-left: 0;
+	width: 40.6em;
+	height: 2.0em;
+	position: relative;
+}
+#demoAct > div {
+	will-change: opacity;
+}
+#demoAct > .pow {
+	width:  1em;
+	height: 1em;
+	top: 50%;
+	left:  0;
+	transform: translateY(-50%);
+}
+#demoAct > .actor {
+	font-size: inherit;
+	display: inline-block;
+	bottom: 0;
+	left:   0;
+}
+
+.Demo .standbyAnim #demoAnim {
+	opacity: 0;
+}
+.Demo .standbyAnim [data-dot=pow] {
+	animation: none;
+}
+.Demo [data-dot=pow] {
+	animation-delay: .5s;
+}
+
+/*--- About extend life ---*/
+.aboutExtend {
+	color: orange;
+	position: absolute;
+	top: 27.6em;
+	left: 2.1em;
+}

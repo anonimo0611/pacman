@@ -1,0 +1,289 @@
+html, body {
+	margin:  0;
+	padding: 0;
+	width:  100%;
+	height: 100%;
+	overflow: hidden;
+}
+html {
+	color: #fff;
+	background: #2b2b37;
+	font-size: 20px;
+	cursor: default;
+	user-select: none;
+}
+body {
+	font: 700 1rem/1 Verdana,sans-serif;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+::selection {
+	color: inherit;
+	background: 0 0;
+}
+div,h1,ul,ol,dl,dt,dd,menu,li,th,td,form,input,output {
+	margin:  0;
+	padding: 0;
+	list-style-type: none;
+}
+div,ul,menu,li,dt,dd,table,button,kbd {
+	box-sizing: border-box;
+}
+template {
+	display: none;
+}
+small {
+	font-size: 70%;
+}
+
+.digit, span.dots {
+	font-family: Digit;
+}
+.hypen {
+	visibility: hidden;
+}
+.hypen::after {
+	content: '\A';
+	white-space: pre-wrap;
+}
+
+/*--- Loading message ---*/
+#loading {
+	background: 0 0;
+	font: bolder 4vmin/1 Atari,Verdana;
+	position: fixed;
+	z-index: 100000;
+	top:  50%;
+	left: 50%;
+	transform: translate(-50%,-50%);
+}
+
+/*--- Board container ---*/
+#board {
+	background: #000;
+	font: 1rem/1 Atari,sans-serif;
+	border-radius: .7rem;
+	padding: .5rem 0 .1em 0;
+	opacity: 0;
+	transform-origin: center;
+	will-change: transforom;
+}
+#board[data-loaded=true] {
+	opacity: 1;
+}
+
+/*--- Hide cursor ---*/
+[data-cursor=hidden]    #board:not(.title),
+[data-cursor=stayStill] #board:not(.title) {
+	cursor: none;
+}
+
+/*--- Heading and Current level ---*/
+h1, #level {
+	color: #ff0;
+	position: absolute;
+	z-index: 900;
+}
+h1 {
+	text-indent: -1.5em;
+	font: bold 1.1em/.95 Verdana,sans-serif;
+	top:  11.4rem;
+	right: 0.25em;
+}
+#level {
+	text-transform: uppercase;
+	font-size: 1em;
+	top: 11.9rem;
+	left: 0.2em;
+	transform: scale(.7);
+	transform-origin: 0 center;
+}
+#level::first-letter, #levelNum {
+	font-size: 130%;
+}
+
+.wf-atari h1 {
+	text-transform: lowercase;
+	font: 1.15rem/.5 Pacfont;
+	top:  11.60rem;
+	right: 0.35rem;
+}
+.wf-atari #level {
+	text-align: center;
+	word-spacing: -.1em;
+	width: 10rem;
+	left: .15em;
+	transform: scale(.48,.6);
+}
+
+/*--- Start button ---*/
+#startBtn {
+	text-align: center;
+	white-space: nowrap;
+	color: #eee;
+	background: rgba(34,34,34,.7);
+	font: inherit;
+	border: solid 1px #777;
+	padding: .4rem 1.5rem .2rem 1.5rem;
+	width: auto;
+	position: absolute;
+	z-index: 1100;
+	top:  28.7rem;
+	left: 50%;
+	transform: translateX(-50%);
+	transition: color .2s, border-color .2s;
+}
+#startBtn:hover {
+	color: #74ccf8;
+	border-color: currentColor;
+}
+#startBtn:focus {
+	border-width: 2px;
+}
+#startBtn:active {
+	color: #f39;
+	border-color: currentColor;
+}
+.wf-atari #startBtn {
+	font-size: .8rem;
+	padding-right: 1.25rem;
+}
+
+/*--- Board header ---*/
+#boardHeader {
+	display: flex;
+	position: absolute;
+	z-index: 700;
+	top:  0.5rem;
+	left: 2.1rem;
+}
+/* Score */
+#boardHeader dl {
+	margin-right: 1em;
+	display: flex;
+	align-items: center;
+	gap: 1rem;
+}
+#boardHeader dd {
+	width: 7em;
+}
+[data-prac=true] #hiscoreContainer * {
+	display: none;
+}
+[data-prac=true] #hiscoreContainer::before {
+	content: 'PRACTICE';
+}
+/* 1UP */
+@keyframes oneUP {
+	50% {opacity: 0;}
+}
+#oneUP {
+	animation: oneUP .7s step-end infinite;
+	will-change: opacity;
+}
+#oneUP.flash {
+	color: #ff0f0f;
+	animation-duration: .3s;
+}
+#board[data-paused=true] #oneUP,
+body:not(#Ready):not(#Playing) #oneUP {
+	color: unset;
+	animation: none;
+}
+
+/*--- Scene switching ---*/
+[data-loaded=true] #titleScr, #ready {
+	display: none;
+}
+#Title #titleScr,
+#Ready #ready {
+	display: block;
+}
+
+/*--- Message under the ghost house ---*/
+.message {
+	color: #ff0;
+	display: block;
+	top: 18.05rem;
+}
+#message {
+	text-align: center;
+	color: red;
+	position: absolute;
+	z-index: 1100;
+	left: 50%;
+	transform: translateX(-50%);
+}
+#message:empty {
+	display: none;
+}
+
+/*--- Ready scene ---*/
+#ready {
+	text-align: center;
+	z-index: 1100;
+}
+#ready > li {
+	position: absolute;
+	left: 50%;
+	transform: translateX(-50%);
+}
+#ready > li.player1 {
+	color: #0ff;
+	display: none;
+	top: 12.05rem;
+}
+.start #ready > li.player1 {
+	display: block;
+}
+
+.wf-atari #ready > li,
+.wf-atari .message {
+	left: calc(50% + .05em) !important;
+}
+
+/*--- Board Footer ---*/
+#boardFooter {
+	width: 100%;
+	position: absolute;
+	z-index: 700;
+	bottom: 2rem;
+	left: 0;
+}
+/* Lives, Fruit counter */
+#lives, #fruits {
+	display: flex;
+	position: absolute;
+}
+#lives {
+	margin: .2em 0 0 2.2rem;
+}
+#fruits {
+	right: 2rem;
+	flex-direction: row-reverse;
+}
+
+/*--- Target tiles ---*/
+#targetTiles {
+	width:  28rem;
+	height: 33rem;
+	position: absolute;
+	z-index: 2000;
+	top: calc(1rem - 1px);
+	left: 0;
+}
+
+/*--- fc2 ---*/
+img[width="0"][height="0"] {
+	float: right;
+}
+#fc2_footer {
+	position: fixed;
+	z-index: 2000;
+	left:   0;
+	bottom: 0;
+}
+#fc2_footer a[href] {
+	color: #6159ff !important;
+}
