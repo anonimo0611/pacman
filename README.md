@@ -1,4 +1,5 @@
 <h1>自作パックマン(HTML5+CSS3+JS/ES2022)</h1>
+![スクリーンショット](https://github.com/anonimo0611/pacman/assets/111575913/3d21ae43-f63b-45a9-8b6c-37d3ad5993d1)
 <p><a href="https://pacman.holenet.info/">The Pac-Man Dossier</a> を参考にアレンジしたPAC-MANのクローンゲームです。</p>
 <p>視覚的要素をCSSに委ねて、簡潔なスクリプトで実装する試みです。</p>
 
