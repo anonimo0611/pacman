@@ -123,7 +123,7 @@ h1 {
 	white-space: nowrap;
 	color: #eee;
 	background: rgba(34,34,34,.7);
-	font: inherit;
+	font: 1rem/1 Atari,sans-serif;
 	border: solid 1px #777;
 	padding: .4rem 1.5rem .2rem 1.5rem;
 	width: auto;
