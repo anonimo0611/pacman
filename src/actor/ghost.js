@@ -69,7 +69,7 @@ export class FrightMode {
 	static get time() {return this.#timeList[Game.clampedLv-1]*1e3}
 	#timeCnt    = 0
 	#captureCnt = 0
-	#flashedCnt = int(Scene.isPlaying && FrightMode.time <= 2e3)
+	#flashedCnt = int(!Scene.isDemo && FrightMode.time <= 2e3)
 	get points() {return 2 ** this.#captureCnt * 100}
 	get allCaptured() {return this.#captureCnt == GhsNames.length}
 	constructor() {
