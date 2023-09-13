@@ -67,7 +67,6 @@ small {
 	padding: .5rem 0 .1em 0;
 	opacity: 0;
 	transform-origin: center;
-	will-change: transforom;
 }
 #board[data-loaded=true] {
 	opacity: 1;
