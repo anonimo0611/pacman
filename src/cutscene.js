@@ -129,7 +129,7 @@ export class Cutscene {
 		const step = 3.3
 		if (dAka.trX-step > centerPos.x)
 			return void dAka.moveByDir(L, step)
-		if (!c.elapsedCnt)
+		if (c.elapsedCnt < 0)
 			dAka.transform(centerPos.x).addClass('clothesGotCaught')
 
 		++c.elapsedCnt < 94 && dAka.moveByDir(L, .225)
