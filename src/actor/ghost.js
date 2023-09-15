@@ -10,8 +10,8 @@ import {GhsElms,dAka}  from './actelem.js'
 import {Pacman as Pac} from './pacman.js'
 import {TargetTile}    from './target.js'
 
-export const GhsEnum  = freeze({Akabei:0,Pinky:1,Aosuke:2,Guzuta:3})
-export const GhsNames = freeze(keys(GhsEnum))
+export const GhsEnum  = freeze({Akabei:0,Pinky:1,Aosuke:2,Guzuta:3,Max:4})
+export const GhsNames = freeze(keys(GhsEnum).slice(0,-1))
 
 const InstanceMap = new Map()
 const Dirs = freeze([U,L,D,R])
@@ -71,7 +71,7 @@ export class FrightMode {
 	#captureCnt = 0
 	#flashedCnt = int(!Scene.isDemo && FrightMode.time <= 2e3)
 	get points() {return 2 ** this.#captureCnt * 100}
-	get allCaptured() {return this.#captureCnt == GhsNames.length}
+	get allCaptured() {return this.#captureCnt == GhsEnum.Max}
 	constructor() {
 		$(GhsElms).offon('Bitten', _=> ++this.#captureCnt)
 		InstanceMap.set(FrightMode, this.#toggleMode(true))
@@ -107,24 +107,28 @@ const Elroy = new class { // "Akabei" accelerate three times in each level
 	reset() {if (!Game.restarted) this.#part = 0}
 }
 const DotCounter = new class {
-	#global = -1
-	#counts = new Uint8Array(GhsNames.length) // personal dot counters
-	#limit  = {Pinky:[7, 0,0,0],Aosuke:[17, 30,0,0],Guzuta:[32, 60,50,0]}
-	get global() {return this.#global}
-	pers(idx)    {return this.#counts[idx]}
-	gLimit(idx)  {return this.#limit[GhsNames[idx]][0] |0} // global
-	pLimit(idx)  {return this.#limit[GhsNames[idx]][min(Game.level,3)] |0} // personal
-	initGlobal() {this.#global = -1}
+	#globalCnt = -1
+	#counters  = new Uint8Array(GhsEnum.Max) // personal dot counters
+	#limitList = [[7, 0,0,0],[17, 30,0,0],[32, 60,50,0]] // Pinky,Aosuke,Guzuta
+	release(i, fn) {
+		const gLimit = this.#limitList[i-1][0] // global limit
+		const pLimit = this.#limitList[i-1][min(Game.level,3)] // personal limit
+		const timeOutLimit = (Game.level <= 4 ? 4e3 : 3e3)
+		if (Pac.timeToStopEating >= timeOutLimit) fn()
+		else (!Game.restarted || this.#globalCnt < 0)
+			? this.#counters[i] >= pLimit && fn()
+			: this.#globalCnt   == gLimit && fn(i == GhsEnum.Guzuta)
+				&& (this.#globalCnt = -1)
+	}
 	add() {
-		(Game.restarted && this.global >= 0)
-			? this.#global++
-			: this.#counts[GhsElms.findIndex(g=> g.isIdle)]++
+		(Game.restarted && this.#globalCnt >= 0)
+			? this.#globalCnt++
+			: this.#counters[GhsElms.findIndex(g=> g.isIdle)]++
 	}
 	reset() {
-		!Game.restarted && this.#counts.fill(0)
-		this.#global = Game.restarted? 0 : -1
+		!Game.restarted && this.#counters.fill(0)
+		this.#globalCnt = Game.restarted? 0 : -1
 	}
-	get timeoutLimit() {return Game.level <= 4 ? 4e3 : 3e3}
 }
 export class Ghost {
 	static {
@@ -198,25 +202,18 @@ export class Ghost {
 		this.#move(g.destTile)
 	}
 	#bounceAtHouse() {
-		const {g}= this
-		!Ctrl.isChaseMode && this.#standby(DotCounter)
+		const {g,index}= this
+		if (!Ctrl.isChaseMode)
+			DotCounter.release(index, this.#release.bind(this))
 		if (g.isGoOut) return
 		this.#orient = (g.trY > Maze.PenTop && this.#orient != D)
 			? U : (g.trY < Maze.PenBottom ? D : U)
 		g.moveByDir(this.#orient, this.speed).isToHouse = false
 	}
-	#standby(dc) {
-		const {g,index:i}= this
-		if (Pac.timeToStopEating >= dc.timeoutLimit)
-			return void this.#release()
-		!Game.restarted || dc.global < 0
-			? dc.pers(i) >= dc.pLimit(i) && this.#release()
-			: dc.global  == dc.gLimit(i) && this.#release(g == GhsElms.at(-1))
-	}
 	#release(deactivateGlobalDotCnt=false) {
 		Pac.resetTimer()
-		deactivateGlobalDotCnt && DotCounter.initGlobal()
 		this.g.prop({isIdle:false,isGoOut:true})
+		return deactivateGlobalDotCnt
 	}
 	#leaveHouse() {
 		const {g,speed:step}= this
@@ -242,8 +239,8 @@ export class Ghost {
 	#reverse() {
 		const {g}= this
 		if (g.isLeftHouse) return Maze.getTile(g)
-		const dir = Dir.opposite(g.movDir || this.#orient)
-		return adj(this.#orient=dir, g.prop({revSig:g.isInHouse}))
+		this.#orient = Dir.opposite(g.movDir || this.#orient)
+		return adj(this.#orient, g.prop({revSig:g.isInHouse}))
 	}
 	#decideNext(isPre) {
 		const {g}= this
