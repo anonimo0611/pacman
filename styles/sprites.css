@@ -102,7 +102,7 @@ body:not(#LostLife) #lost {
 }
 /* Animation */
 @keyframes Pacman {
-	to {transform: translate3d(-100%,0,0);}
+	to {transform: translateX(-100%);}
 }
 .Pacman::before {
 	animation: Pacman 300ms steps(4) infinite;
@@ -166,7 +166,7 @@ body:not(#Playing):not(.Demo) .Pacman::before {
 
 /* Animation: normal */
 @keyframes Ghost {
-	to {transform: translate3d(-100%,0,0);}
+	to {transform: translateX(-100%);}
 }
 .ghs.actor::before,
 .ghs.repaired::after {
@@ -175,7 +175,7 @@ body:not(#Playing):not(.Demo) .Pacman::before {
 
 /* Animation: frightened */
 @keyframes fright-flash {
-	to {transform: translate3d(-100%,0,0);}
+	to {transform: translateX(-100%);}
 }
 .ghs.fright::before {
 	background-position: calc(-42px*11) calc(-42px*2) !important;
