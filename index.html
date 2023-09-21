@@ -74,7 +74,7 @@
 				</ul>
 			</div>
 			<div id="fruit" class="fruit"></div>
-			<script>$(fruit).on('transitionend',function(){this.hidden = this.style.opacity == 0})</script>
+			<script>fruit.ontransitionend = function(){this.hidden = this.style.opacity == 0}</script>
 			<canvas class="Pacman" id="lost" width="70" height="70"></canvas>
 		</div>
 		<div id="boardFooter">
