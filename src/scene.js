@@ -21,13 +21,11 @@ export const Scene = freeze(new class {
 	}
 	get iter()    {return this.#enumSet.values()}
 	get current() {return String(this.#scene)}
-	some(keyStr)  {return [String(keyStr).split('|')].flat().some(k=> k === this.#scene)}
+	some(keyStr)  {return splitByBar(keyStr).some(k=> k === this.#scene)}
 	switch(scene, fn, ...args) {
 		if (!this.#enumSet.has(scene))
 			throw ReferenceError(`Scene '${scene}' is not defined`)
-		$trigger('Switching')
-		dBody.attr('id', this.#scene=scene)
-		isFun(fn) && fn(...args)
-		$trigger(scene)
+		$trigger('Switching') && dBody.attr('id', this.#scene=scene)
+		isFun(fn) && fn(...args), $trigger(scene)
 	}
 })
