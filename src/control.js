@@ -17,7 +17,7 @@ export const Ctrl = new class {
 	dirFrom = e=> Dir.from(e?.code, {awsd:true}) || null
 	#fitToViewport() {
 		const s = min(innerWidth/dBoard.width*.98, innerHeight/dBoard.height)
-		dBoard.transform({scale:dRoot.dataset.size == 'viewport' ? s : 1})
+		dBoard.transform({scale:dRoot.dataset.size == 'viewport' ? round(s*100)/100 : 1})
 	}
 	get livesMax()     {return +Form.lvsRng.value}
 	get speedRate()    {return +Form.spdRng.value}
