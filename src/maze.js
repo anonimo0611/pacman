@@ -67,10 +67,11 @@ export const Maze = new class _Maze {
 	isInHouse  = ({y, x})=> between(y, 13,17) && between(x, 10,17)
 	isInTunnel = ({y, x})=> Maze.Tunnel.side({y, x}) != null
 
+	#Tiles    = [];
 	TileSize  = TILE
 	Lines     = MAP_DATA.split('\n')
 	DotMax    = MAP_DATA.match(/[.O]/g).length
-	dTable    = makeElm('table#mazeGrid')
+	dTable    = makeElm('div#mazeGrid')
 	ColMax    = this.Lines[0].length
 	Width     = (this.ColMax)   * TILE
 	Center    = (this.Width/2)  - TILE/2 + .5
@@ -79,35 +80,35 @@ export const Maze = new class _Maze {
 	PenBottom = (this.PenMiddle)+ TILE/2
 
 	#dotsLeft = this.DotMax
-	get dotsLeft() {return Maze.#dotsLeft}
+	get dotsLeft() {return this.#dotsLeft}
 
 	static {$one('DOMContentLoaded', this.setup)}
 	static setup() {
 		$on('Respawn End', _Maze.spawnObjs)
 		$on('DotEaten', _=> Maze.#dotsLeft--)
 		Form.powChk.on('change', Maze.#powDotsToggle)
+		Maze.dTable.prependTo(dMaze)
 		Maze.Lines.forEach((line, y)=> {
-			const cR = makeElm('tr')
-			Array.from(line).forEach((d, x)=> {
-				const [cD,dx,dy]= [makeElm('td'),TILE*x,TILE*y]
-				const [hasDoor,hasWall]=[(d == '-'),/[#-]/.test(d)]
-				if (d == 'O') cD.dataset.role = 'pow'
-				cD.readOnly({x,y,dx,dy,hasDoor,hasWall}).appendTo(cR)
-			}); cR.appendTo(Maze.dTable)
-		}); Maze.dTable.appendTo(dMaze)
-		_Maze.spawnObjs()
+			Array.from(line).forEach((maptip, x)=> {
+				const [tile,dx,dy]= [makeDiv(),TILE*x,TILE*y]
+				const [hasDoor,hasWall]=[(maptip == '-'), /[#-]/.test(maptip)]
+				Maze.#Tiles.push(tile)
+				maptip == 'O' && (tile.dataset.role = 'pow')
+				tile.readOnly({x,y,dx,dy,hasDoor,hasWall}).appendTo(Maze.dTable)
+			});
+		});_Maze.spawnObjs()
 	}
 	static spawnObjs() {
-		for(const row of Maze.dTable.rows)
-			for(const tile of row.cells) {
-				const o = _Maze.makeObj(tile); if (!o) continue
-				o.setPos(tile).addClass(o.id,'actor').appendTo(dMaze)
-				o.x < int(Maze.Door.centerX) && (o.initAlign = L)
-				o.x > int(Maze.Door.centerX) && (o.initAlign = R)
-				const t2 = TILE*2, {id,initAlign = C}= o
-				o.transform(Maze.Center+{[L]:-t2,[R]:t2,[C]:0}[initAlign], tile.top)
-				o.readOnly({id,initAlign, initX:o.x, initTrX:o.trX})
-			}
+		const objs = Maze.#Tiles.map(e=> [_Maze.makeObj(e), e])
+		for (const [o,tile] of objs) {
+			if (!o) continue;
+			o.setPos(tile).addClass(o.id,'actor').appendTo(dMaze)
+			o.x < int(Maze.Door.centerX) && (o.initAlign = L)
+			o.x > int(Maze.Door.centerX) && (o.initAlign = R)
+			const t2 = TILE*2, {id,initAlign = C}= o
+			o.transform(Maze.Center+{[L]:-t2,[R]:t2,[C]:0}[initAlign], tile.top)
+			o.readOnly({id,initAlign, initX:o.x, initTrX:o.trX})
+		}
 		$trigger('Spawned')
 		if (!Game.restarted) {
 			$trigger('NewLevel')
@@ -127,7 +128,7 @@ export const Maze = new class _Maze {
 		}
 	}
 	getTile({y=0, x=0}={}) {
-		return Maze.dTable.rows[y]?.cells[x] || null
+		return Maze.#Tiles[y*Maze.ColMax+x] || null;
 	}
 	adjacent(dir, {y=0, x=0}={}) {
 		return Dir.isValid(dir) && ({y, x}=Dir.toVec2(dir, 1, {y, x}))
@@ -139,7 +140,7 @@ export const Maze = new class _Maze {
 		return trPos
 	}
 	#powDotsToggle() {
-		for(const tile of Maze.dTable.find('[data-role=pow]'))
+		for (const tile of Maze.dTable.find('[data-role=pow]'))
 			tile.prop({hasDot:true}).data({dot:this.checked? 'pow':'normal'})
 	}
 }; deepFreeze(Maze)
@@ -157,13 +158,15 @@ export const Fruit = new class {
 	number(index)  {return Fruit.#fruitList[min(12,index ?? Game.level-1) || 0]}
 	#visible(bool) {return dFruit.opacity(bool).prop({hidden:!bool})}
 	#dotEaten() {
-		if (!Fruit.#appearSet.has(Maze.DotMax - Maze.dotsLeft)) return
+		if (!Fruit.#appearSet.has(Maze.DotMax - Maze.dotsLeft))
+			return
 		Fruit.#visible(true)
 		Timer.set(randInt(9e3, 1e4 - 300)/Game.speedRate,
 			_=> dFruit.opacity(0, 300/Game.speedRate), {key:Fruit})
 	}
 	collision({x, y}) {
-		if (!dFruit.circleCollision({x, y}, dFruit.width/4)) return
+		if (!dFruit.circleCollision({x, y}, dFruit.width/4))
+			return
 		Timer.cancel(Fruit) && Sound.play('fruit')
 		Game.showPoint(Fruit.#visible(false))
 	}

@@ -16,8 +16,10 @@ export const Ctrl = new class {
 	}
 	dirFrom = e=> Dir.from(e?.code, {awsd:true}) || null
 	#fitToViewport() {
-		const s = min(innerWidth/dBoard.width*.98, innerHeight/dBoard.height)
-		dBoard.transform({scale:dRoot.dataset.size == 'viewport' ? round(s*100)/100 : 1})
+		const scale = (dRoot.dataset.size == 'viewport')
+			? min(innerWidth/dBoard.width*.98, innerHeight/dBoard.height)
+			: 1
+		dBoard.transform({scale})
 	}
 	get livesMax()     {return +Form.lvsRng.value}
 	get speedRate()    {return +Form.spdRng.value}
@@ -31,9 +33,13 @@ export const Ctrl = new class {
 	get isPractice()   {return !!LevelMenu.index && Ctrl.consecutive || !Ctrl.consecutive}
 	#saveData() {
 		const data = {size: dSize.className}
-		for(const ctrl of dqsAll('.menu,[type=range],[type=checkbox]'))
-			data[ctrl.id] = {menu:Menu[ctrl.id]?.index,
-				range:+ctrl.value, checkbox:ctrl.checked}[ctrl.type]
+		for (const ctrl of dqsAll('.menu,[type=range],[type=checkbox]')) {
+			data[ctrl.id] = {
+				menu:    Menu[ctrl.id]?.index,
+				range:  +ctrl.value,
+				checkbox:ctrl.checked,
+			}[ctrl.type]
+		}
 		localStorage.anopacman = JSON.stringify(data)
 		return this
 	}
@@ -84,7 +90,7 @@ export const Ctrl = new class {
 		})
 		dSize.on('click','button', function() {
 			const btn = dSize.find('button')[1^$(this).index()]
-			dRoot.dataset.size = this.textContent == 'Fit' ? 'viewport':'actual'
+			dRoot.dataset.size = (this.textContent == 'Fit') ? 'viewport':'actual'
 			dSize.attr('class',`to${btn.textContent}`) && btn.focus()
 			Ctrl.#saveData().#fitToViewport()
 		})

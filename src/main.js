@@ -39,13 +39,16 @@ export const Status = new class {
 		if (Scene.isQuit) {
 		    Status.#setScore(Status.#savedScore)
 		    Status.#setHiScore(Status.#savedHigh)
-		} else if (Status.#highScore > highScore)
+		}
+		else if (Status.#highScore > highScore) {
 			localStorage.anopac_hiscore = Status.#highScore
+		}
 	}
 	#setLevel(lv=Game.level) {
 		dFruits.text(null)
-		for(let i=max(lv-7, 0); i<lv; i++)
+		for (let i=max(lv-7, 0); i<lv; i++) {
 			makeDiv().css('--o', Fruit.number(i)).appendTo(dFruits)
+		}
 		Form.levelNum.value = String(lv).padStart(2, 0)
 	}
 	#setScore(score=0) {
@@ -67,6 +70,7 @@ export const Status = new class {
 			(pts > Status.#highScore) && Status.#setHiScore(pts)
 	}
 }
+
 const Lives = new class {
 	static {Form.lvsRng.on('input', _=> Lives.#set())}
 	get left() {return +dLives.children.length}
@@ -77,8 +81,9 @@ const Lives = new class {
 	append() {makeDiv().appendTo(dLives)}
 	remove() {dLives.lastElementChild?.remove()}
 }
+
 export const Game = new class {
-	static {$one('DOMContentLoaded', this.setup)}
+	static {$one('load', this.setup)}
 	static setup() {
 		Game.#initStartBtn()
 		Game.#titleScreen()
@@ -107,7 +112,8 @@ export const Game = new class {
 		$on('click', _=> {!dqs(':focus') && Form.startBtn.focus()})
 	}
 	#keydown(e) {
-		if (Confirm.opened) return
+		if (Confirm.opened)
+			return
 	 	if (e.ctrlKey && e.key == 'Delete')       return Game.#quit()
 		if (Ticker.paused   && Ctrl.dirFrom(e))   return Game.#pause()
 		if (Scene.isPlaying && e.key == 'Escape') return Game.#pause()
@@ -119,7 +125,8 @@ export const Game = new class {
 			Game.#quit, _=> Game.#pause(), 'Quit','Resume')
 	}
 	#pause(state=null, force) {
-		if (!Scene.isPlaying || Confirm.opened) return
+		if (!Scene.isPlaying || Confirm.opened)
+			return
 		dBoard.dataset.paused = Ticker.pause(force)
 		Status.message = (Ticker.paused && state === null ? 'PAUSED' : state)
 		Ticker.paused? Sound.pause() : Sound.resume()
@@ -133,7 +140,8 @@ export const Game = new class {
 		dBoard.attr('class','ready title')
 	}
 	#start(e) {
-		if (/^key/.test(e.type) && !Ctrl.dirFrom(e)) return
+		if (/^key/.test(e.type) && !Ctrl.dirFrom(e))
+			return
 		Scene.switch('Start')
 		dMaze.css('--spd', Ctrl.speedRate)
 		dBoard.replaceClass('title','start')
@@ -173,7 +181,8 @@ export const Game = new class {
 		Timer.stop().sequence([800,Maze.Door.open], [2350,Game.#end])
 	}
 	#pacDisappeared() {
-		if (Lives.left) Game.#end()
+		if (Lives.left)
+			Game.#end()
 		else {
 			Status.setGameOverMsg()
 			Timer.set(1600, Game.#end)
@@ -186,11 +195,13 @@ export const Game = new class {
 		Ticker.stop() && Sound.stop()
 		TargetTile.reset()
 		Maze.Door.close()
-		Game.#restarted = (Scene.isLostLife && Lives.left > 0)
 		$('#maze .actor, .pts').remove()
+		Game.#restarted = (Scene.isLostLife && Lives.left > 0)
+
 		if (Scene.isAteAll && Ctrl.consecutive) {
 			Game.#setLevel(++Game.#level)
-			if (!Ctrl.isPractice && Cutscene.begin()) return
+			if (!Ctrl.isPractice && Cutscene.begin())
+				return
 		}
 		const isOver = Scene.isLostLife && Lives.left == 0
 		const isQuit = Scene.isQuit || (Scene.isAteAll && !Ctrl.consecutive)
@@ -208,6 +219,7 @@ export const Game = new class {
 		const cls   = classList.item(0)
 		const pts   = (isGhs? Ghost : Fruit).points
 		const dPts  = makeDiv(`.pts.pts_${cls}`).text(pts).appendTo(scr)
+
 		if (isGhs) {
 			Timer.freeze() && (dBoard.dataset.frozen = true)
 			trPos.x += (width  - dPts.width) / 2
@@ -224,6 +236,7 @@ export const Game = new class {
 		return pts
 	}
 }
+
 $on('load', _=> {
 	byId('loading').remove()
 	byId('overlay').addClass('hidden')

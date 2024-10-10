@@ -8,7 +8,7 @@ import {Ctrl}         from './control.js'
 import {FrightMode}   from './actor/ghost.js'
 import {dPac,dAka,GhsElms} from './actor/actelem.js'
 
-freeze(new class { // The attract demo begins after 30 seconds of inactivity
+(new class { // The attract demo begins after 30 seconds of inactivity
 	WaitTime = 1e3 * 30 // ms
 	constructor() {
 		$on('focus Title',   _=> Scene.isTitle && this.start())
@@ -18,19 +18,27 @@ freeze(new class { // The attract demo begins after 30 seconds of inactivity
 		const evs = $evsNS('mousemove wheel click keydown resize','.STANDBY')
 		$offon(evs, _=> this.reset()) && Ticker.set(_=> this.loop())
 	}
-	reset() {Ticker.resetCount()}
-	stop()  {Ticker.stop() && $off('.STANDBY')}
+	reset() {
+		Ticker.resetCount()
+	}
+	stop()  {
+		Ticker.stop() && $off('.STANDBY')
+	}
 	loop() {
-		if (Confirm.opened || dqs(':not(#startBtn):focus')) return this.reset()
-		if (Ticker.count*Ticker.FPeriod >= this.WaitTime) Demo.begin()
+		if (Confirm.opened || dqs(':not(#startBtn):focus'))
+			return this.reset()
+		if (Ticker.count*Ticker.FPeriod >= this.WaitTime)
+			Demo.begin()
 	}
 })
+
 const Demo = new class {
 	begin() {
 		Scene.switch('Demo', Demo.#setup)
 		const elms = [...byId('demo').find('thead,td,.bonusGuide')]
 		Ticker.set(_=> {
-			if (Ticker.count % (elms[0]?.cellIndex ? 30 : 60) != 0) return
+			if (Ticker.count % (elms[0]?.cellIndex ? 30 : 60) != 0)
+				return
 			elms.shift().opacity(1)
 			elms.length == 0 && Timer.stop().set(500, Demo.#setAnim)
 		})
@@ -49,14 +57,15 @@ const Demo = new class {
 		objs.slice(1).reverse().forEach((a, i, objs)=> {
 			a.prop({movDir:L})
 			 .transform({y:(a.height-scr.height)/2})
-			 .transform({x:!i ? scr.width-a.width : objs[i-1].trX-a.width*.96})
+			 .transform({x:i? objs[i-1].trX-a.width*.96 : scr.width-a.width})
 		})
 		const fn = _=> !scr.qs('.ghs') && Demo.#end()
 		Ticker.set(_=> objs.length && Demo.#anim(objs[0], {fn,scr}))
 		byId('demo').removeClass('standbyAnim')
 	}
 	#anim(pow, cfg) {
-		if (Timer.frozen) return
+		if (Timer.frozen)
+			return
 		if (dPac.trX < 0)
 			dPac.movDir = R
 		if (pow.width && dPac.trX <= pow.width/2) {
@@ -67,23 +76,32 @@ const Demo = new class {
 		Ticker.count > 9 && GhsElms.forEach(g=> {
 			g.moveByDir(L, g.movDir == L ? 3.6 : -1.7)
 			g.circleCollision(dPac.trPos, g.width/7)
-				&& Game.showPoint(g.trigger('Bitten'), cfg) && g.remove()
+				&& Game.showPoint(g.trigger('Bitten'), cfg)
+				&& g.remove()
 		})
 	}
 	#end(e) {
-		if (e?.target.tagName == 'BUTTON') return
+		if (e?.target.tagName == 'BUTTON')
+			return
 		Ticker.stop() && $off('.DEMO')
 		$('#cfgDialog').hide()
 		$('#demo').remove()
-		e? setTimeout(_=> $trigger('EndDemo'), 0) : Demo.begin()
+		e? setTimeout(_=> $trigger('EndDemo'), 0)
+		 : Demo.begin()
 	}
 }
+
 export class Cutscene {
 	static #symbol = Symbol()
-	static {$('button.cutscn').on('click', e=> this.begin(+e.target.value))}
+	static {
+		$('button.cutscn').on('click', e=> this.begin(+e.target.value))
+	}
 	static begin(num={3:1, 6:2, 10:3}[Game.level]) {
-		if (num === 0) return void Demo.begin()
-		if (Scene.isCutscene || !between(num, 1,3)) return false
+		if (num === 0)
+			return void Demo.begin()
+		if (Scene.isCutscene || !between(num, 1,3))
+			return false
+
 		Scene.switch('Cutscene', this.#setup)
 		Sound.play('cutscene', {loop:1^num == 2})
 		return !!new Cutscene(this.#symbol, num)
@@ -95,6 +113,7 @@ export class Cutscene {
 	constructor(symbol, snum) {
 		if (symbol != Cutscene.#symbol)
 			throw TypeError(`The constructor ${this.constructor.name}() is not visible`)
+
 		this.pacStopped = false
 		const {x, y}= this.centerPos={x:dCB.width/2, y:(dCB.height-dAka.height)/2}
 		if (snum == 2) {
@@ -135,6 +154,7 @@ export class Cutscene {
 		++c.elapsedCnt < 94 && dAka.moveByDir(L, .225)
 		;[27,59,130].includes(c.elapsedCnt)
 			&& this.cloth.css('--n', ++c.spriteIdx)
+
 		switch (c.elapsedCnt) {
 		case   0: return void this.cloth.opacity(1)
 		case  94: return void dAka.addClass('stopped')
@@ -146,13 +166,16 @@ export class Cutscene {
 	scene3({dir,isR}) {
 		!Ticker.count && dAka.addClass('repaired')
 		dAka.moveByDir(dir, !isR ? 3.3 : 3.5)
+
 		if (dAka.trX < -dAka.width*6)
 			dAka.addClass('bared') && (this.dir = R)
 		if (dAka.trX > dAka.width*8+dCB.width && isR)
 			this.end()
 	}
 	pause() {
-		Ticker.pause()? Sound.pause() : Sound.resume()
+		Ticker.pause()
+			? Sound.pause()
+			: Sound.resume()
 		dBoard.dataset.paused = Ticker.paused
 	}
 	end() {

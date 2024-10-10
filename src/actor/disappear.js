@@ -7,6 +7,12 @@ const DIS_DURATION  = 1149/Ticker.FPeriod
 const LINE_DURATION =  300/Ticker.FPeriod
 const LINE_FADEOUT  =  300/Ticker.FPeriod
 
+const getCircum = (degree,r,cx,cy)=> {
+	const x = cos(PI/180*degree) * r + cx
+	const y = sin(PI/180*degree) * r + cy
+	return {pos:{x, y}, values:[x, y]}
+}
+
 export class Disappear {
 	#innerR    = 0
 	#outerR    = 0
@@ -45,9 +51,10 @@ export class Disappear {
 		const or = min(this.#outerR += this.EdR/LINE_DURATION, this.EdR)
 		ctx.save()
 		ctx.translate(SIZE/2, SIZE/2)
-		if (this.#outerR >= this.EdR)
+		if (this.#outerR >= this.EdR) {
 			ctx.globalAlpha = max(this.#lineAlpha -= 1/LINE_FADEOUT, 0)
-		for(let deg=0; deg<360; deg+=360/10) {
+		}
+		for (let deg=0; deg<360; deg+=360/10) {
 			ctx.beginPath()
 	 		ctx.moveTo(...getCircum(deg, ir, 0, SIZE/24).values)
 	        ctx.lineTo(...getCircum(deg, or, 0, SIZE/24).values)

@@ -12,6 +12,7 @@ import {Ghost}        from './ghost.js'
 import {Speed}        from './speed.js'
 
 const {Tunnel,loopX,getTile,adjacent:adj,TileSize:T}= Maze
+
 let eatIndex  = -1
 let notEatCnt = +0
 
@@ -21,7 +22,7 @@ export const Pacman = new class {
 		$on('Playing', _=> Pacman.#init())
 		$on('LostLife',_=> Pacman.#lostLife(pac))
 	}
-	resetTimer(){notEatCnt = 0}
+	resetTimer()  {notEatCnt = 0}
 	get dir()     {return pac.movDir}
 	get trPos()   {return pac.trPos}
 	get tilePos() {return vecDivInt(pac.ctPos, T)}
@@ -35,16 +36,20 @@ export const Pacman = new class {
 		pac.setPos({x:pac.initX+int(pac.movDir == R)})
 	}
 	#keydown(e) {
-		const dir = Dir.from(e.code,{awsd:true})
-		if (Confirm.opened || !dir || e.repeat)   return
-		if (Scene.isPlaying && dir == pac.preDir) return
+		const dir = Dir.from(e.code, {awsd:true})
+		if (Confirm.opened || !dir || e.repeat)
+			return
+		if (Scene.isPlaying && dir == pac.preDir)
+			return
 		if (Scene.isReady) pac.preDir = dir
 		if (Scene.some('Ready|Playing'))
-			adj(dir,pac).hasWall? (pac.preDir=dir)
+			adj(dir,pac).hasWall
+				? (pac.preDir=dir)
 			    : !pac.turning && (pac.orient=dir)
 	}
 	get #moveVector() {
-		let spd = Game.moveSpeed * (Game.level < 13 ? 1 : Speed.PacSlowBase)
+		let spd = Game.moveSpeed
+			* (Game.level < 13 ? 1 : Speed.PacSlowBase)
 		if (eatIndex >= 0)    spd *= Speed.PacEating
 		if (Ghost.frightened) spd *= Speed.PacEnergized
 		return Dir.toVec2(pac.movDir,Speed.Step*spd)
@@ -53,15 +58,17 @@ export const Pacman = new class {
 		const {step,opposite:opp,x:mx,y:my}= this.#moveVector
 		return freeze({
 			dest,dx,dy,mx,my,ov,step,opp,
-			dotType:    dest.dataset.dot,
-			turnedBack: orient == opp,
-			blocked:    adj(orient, dest).hasWall,
-			distance:   abs(mx? dx-ov.x : dy-ov.y),
+			dotType:   dest.dataset.dot,
+			turnedBack:orient == opp,
+			blocked:   adj(orient, dest).hasWall,
+			distance:  abs(mx? dx-ov.x : dy-ov.y),
 		})
 	}
 	update() {
-		if (!Scene.isPlaying || Timer.frozen) return
-		if (eatIndex < 0) notEatCnt++
+		if (!Scene.isPlaying || Timer.frozen)
+			return
+		if (eatIndex < 0)
+			notEatCnt++
 		if (pac.arrived) {
 			const dst = adj(pac.orient,pac)
 			if (!dst.hasWall) this.#setNext(dst)
@@ -105,10 +112,12 @@ export const Pacman = new class {
 			if (s.turnedBack) pac.movDir = pac.orient
 			if (s.blocked && !pac.turning) {pac.dataset.stopped=true}
 			if (s.blocked ||  pac.turning) {pac.transform(nv);return}
-		} pac.moveByDir(pac.movDir, s.step, pac.orient).trPos = loopX(pac)
+		}
+		pac.moveByDir(pac.movDir, s.step, pac.orient).trPos = loopX(pac)
 	}
 	#eatDot(s) {
-		if (!s.dest.hasDot || s.distance >= T/2+s.step) return
+		if (!s.dest.hasDot || s.distance >= T/2+s.step)
+			return
 		this.#playSE()
 		this.resetTimer()
 		$trigger('DotEaten', s.dotType == 'pow')
@@ -125,6 +134,7 @@ export const Pacman = new class {
 		Timer.stop().sequence(
 			[ 300, _=> pac.transform(x).addClass('prep','lost')],
 			[ 700, _=> new Disappear(pac, {...pac.trPos,Sound})],
-			[2210, _=> $trigger('Disappeared')])
+			[2210, _=> $trigger('Disappeared')]
+		)
 	}
 }
