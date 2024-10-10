@@ -62,6 +62,7 @@ main {
 	margin: 0 0 .5em;
 	padding: 0 10px 13px 0;
 	border-radius: .5em;
+	position: relative;
 }
 #animPreview legend {margin-left: .5em}
 #animPreview, #animPreview * {font-size: 20px}
@@ -76,6 +77,20 @@ main {
 #animPreview .radio-buttons {font-family:monospace}
 #animPreview .radio-buttons[data-disabled=true] {color:grayText}
 #animPreview .ctrls {margin-left:120px}
+
+#animPreview a:link,
+#animPreview a:visited {
+	font-size: 90%;
+	position: absolute;
+	bottom: .3em;
+	right:  .3em;
+	color: white;
+}
+#animPreview a[href]:hover {
+	text-decoration: none;
+	color: #fAA;
+	background: #444;
+}
 
 .dropdown-current {
 	background: rgba(59,59,59,.5) !important;
