@@ -1,9 +1,10 @@
 <h1>自作パックマン(HTML5+CSS3+JS/ES2022)</h1>
 <p><a href="https://pacman.holenet.info/">The Pac-Man Dossier</a> を参考にアレンジしたPAC-MANのクローンゲームです。</p>
-<p>試みとして視覚的要素をCSSに委ね、スクリプトを簡潔にしています。</p>
+<p><abbr title="Document Object Model">DOM</abbr>と<abbr title="Cascading Style Sheets">CSS</abbr>による実装で、Canvas APIはほとんど使用していません。</p>
 <p><img src="https://github.com/anonimo0611/pacman/assets/111575913/3d21ae43-f63b-45a9-8b6c-37d3ad5993d1" alt="スクリーンショット"></p>
 <h2>推奨環境</h2>
-<p>最新のPC向けChromium系ブラウザを推奨します。スマホは非対応です。</p>
+<p>最新のPC向けChromium系ブラウザを推奨します。</p>
+<p>タッチデバイスでの操作には対応してません。</p>
 
 <h2>基本的なルール</h2>
 <p>目的は４体いるゴーストを避けながら、迷路上のクッキーを食べつくすことです。</p>
