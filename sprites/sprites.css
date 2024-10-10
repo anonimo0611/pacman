@@ -1,0 +1,267 @@
+.sprites {
+white-space: nowrap;
+overflow: hidden;
+float: left;
+}
+.sprites div.g {
+clear: both;
+position:relative;
+}
+
+.sprites div:not(.g), #animPreview div#preview {
+position:relative;
+display:inline-block;
+float:left;
+width:70px;
+height:70px;
+overflow:hidden;
+}
+
+.sprites div:not(.g)::before,
+.sprites div:not(.g)::after,
+#animPreview div#preview::before,
+#animPreview div#preview::after {
+content: '';
+background-image: url('../res/sprite.png');
+background-repeat: no-repeat;
+position:absolute;
+image-rendering: -webkit-optimize-contrast;
+}
+#animPreview div#preview {
+margin-left: 15px;
+}
+#animPreview div#preview.Pacman,
+#animPreview div#preview.lost {
+margin-left: 18px;
+}
+#animPreview div#preview.bared {
+margin-left: 0;
+}
+
+.sprites div::before,
+.sprites div::after {animation: none !important}
+
+/* Fruits */
+.sprites div.fruit {
+overflow:hidden;
+width: 60px !important;
+height:60px !important;
+margin:0 5px;
+}
+.fruit::before  {
+background-size:780px 240px;
+width:calc(60px * 8);height:60px;
+background-position-y:calc(-60px * 3);
+}
+.fruit.f2::before {background-position-x:-60px}
+.fruit.f3::before {background-position-x:calc(-60px * 2)}
+.fruit.f4::before {background-position-x:calc(-60px * 3)}
+.fruit.f5::before {background-position-x:calc(-60px * 4)}
+.fruit.f6::before {background-position-x:calc(-60px * 5)}
+.fruit.f7::before {background-position-x:calc(-60px * 6)}
+.fruit.f8::before {background-position-x:calc(-60px * 7)}
+
+/* PAC-MAN */
+.Pacman {
+z-index:100;
+overflow:hidden;
+width:64px !important;
+height:64px !important;
+}
+.sprites .Pacman{margin:-2px 3px}
+.Pacman::before {
+background-size:832px 256px;
+content:'';
+width:calc(64px * 3);height:64px;
+display:block;
+animation:Pacman 111ms steps(3) infinite alternate
+}
+.Pacman.frame2::before {background-position-x: -64px}
+.Pacman.frame3::before {background-position-x:-128px}
+.Pacman.frame4::before {background-position-x:-192px}
+.Pacman[data-dir=U] {transform:rotate(90deg)}
+.Pacman[data-dir=R] {transform:rotate(180deg)}
+.Pacman[data-dir=D] {transform:rotate(270deg)}
+
+@keyframes Pacman {
+to {transform:translate3d(-100%,0,0)}
+}
+.Pacman#lost,
+.Pacman.lost {
+position:absolute;
+overflow:hidden;
+}
+.Pacman.lost.prep::before {
+animation:none;
+}
+.Pacman.lost:not(.prep)::before {
+visibility:hidden;
+}
+
+.dots {
+	display: flex !important;
+	align-items: center;
+	justify-content: space-around;
+	margin: -5px 0 0 -35px;
+}
+.dots div {
+	width: 35px !important;
+	height: 35px !important;
+}
+.dot {
+	background: none !important;
+	position: relative;
+	background: none !important;
+}
+.dot::before {
+	background:#ffb491 !important;
+	position:absolute;
+	top: 50%;
+	left:50%;
+	width:  100%;
+	height: 100%;
+	transform: translate(-50%,-50%);
+	clip-path:circle(4.375px at 50% 50%) !important;
+}
+.pow{background-size:92% 92% !important;animation:none !important}
+.dots::before, .dots::after,*::before,.*::after{content:none !important}
+
+/* Ghosts */
+.ghost {
+width:70px;height:70px;
+z-index:105;
+overflow:hidden;
+}
+.ghost::before, .ghost::after, .clothes::before {
+background:no-repeat 0 calc(-70px * 2)/910px 280px url('../res/sprite.png');
+content: '';
+position:absolute;
+top:0;left:0;
+width:calc(70px * 2);
+height:70px;
+animation:ghost 216ms steps(2) infinite;
+}
+.ghost.toHouse{z-index:112}
+.ghost.Akabei {z-index:110}
+.ghost.Pinky  {z-index:108}
+.ghost.Aosuke {z-index:106}
+.ghost.Guzuta {z-index:104}
+
+.ghost.Akabei.angry{
+	filter:drop-shadow(1px 1px 30px red) drop-shadow(-1px -1px 30px red);
+}
+.ghost.Pinky::before {background-position-x:calc(-70px*3)}
+.ghost.Aosuke::before{background-position-x:calc(-70px*5)}
+.ghost.Guzuta::before{background-position-x:calc(-70px*7)}
+
+.ghost.frame2::before {transform:translate(calc(-70px))}
+
+.ghost.fright::before {
+background-position:calc(-70px * 11) calc(-70px * 2) !important;
+width: calc(70px * 2);
+animation:ghost 216ms steps(2) infinite
+}
+.ghost.fright.endsoon::before {
+background-position:calc(-70px * 9) calc(-70px * 2) !important;
+width: calc(70px * 4);
+animation:fright-flash 432ms steps(4) infinite
+}
+
+@keyframes ghost {
+to {transform:translate3d(-100%,0,0)}
+}
+@keyframes fright-flash {
+to {transform:translate3d(-100%,0,0)}
+}
+.ghost.toHouse::before {opacity:0}
+.ghost::after, .clothes::before { /* Eyes, etc */
+content:'';
+width:calc(70px * 4);
+height:70px;
+background-position:0 -70px !important;
+animation:none;
+transform:translate3d(0,0,0);
+}
+.ghost[data-dir=R]::after{transform:translate3d( -70px,0,0)}
+.ghost[data-dir=D]::after{transform:translate3d( -140px,0,0)}
+.ghost[data-dir=L]::after{transform:translate3d(-210px,0,0)}
+.ghost.fright::after,.ghost.bared::after {display:none}
+
+/* Coffee Break */
+.cb  {
+position:relative !important;
+width:100px !important;
+height: 70px;
+}
+.stake, .clothes, .cb .Akabei {
+width:70px;height:70px;
+overflow:hidden;
+position:absolute !important;
+left: 10px;top:0;
+}
+.cb.frame1 {width:80px !important}
+.cb.frame2 {width:100px !important;}
+.cb.frame3 {left:-8px;width:110px !important;}
+.cb.frame4 {left:-40px !important}
+.cb.frame1 .stake, .cb.frame1 .clothes {left:10px}
+.cb.frame2 .stake, .cb.frame2 .clothes {left:22px}
+.cb.frame3 .stake, .cb.frame3 .clothes {left:35px}
+.cb .Akabei {left: 0}
+.cb.frame1 .Akabei {left:0}
+
+.Akabei.ripped {left:-13px}
+.stake::before, .clothes::before {
+width:70px;height:70px;
+background-position-y:-70px !important;
+}
+.stake::before {
+background-position-x:calc(-70px * 8);
+}
+.clothes::before {
+background-position-x:calc(-70px * 9) !important;
+z-index:1000;
+opacity:1;
+}
+.clothes.n1::before{background-position-x:calc(-70px * 10) !important}
+.clothes.n2::before{background-position-x:calc(-70px * 11) !important}
+.clothes.n3::before{background-position-x:calc(-70px * 12) !important}
+
+.ghost.ripped::before{
+background-position-x:calc(-70px * 2);
+width:70px;height:70px;
+animation:none
+}
+.ghost.ripped::after {
+background-position-x:calc(-70px * 4) !important;
+width:calc(70px * 2);
+transform:translate3d(0,0,0)
+}
+.ghost.ripped[data-dir=RD] {
+left:-9px;
+}
+.ghost.ripped[data-dir=RD]::after {transform:translate3d(-70px,0,0)}
+.ghost.repaired::after {
+background-position-x:calc(-70px * 6) !important;
+width:calc(70px * 2);
+animation:akabei_cf .24s steps(2) infinite
+}
+.ghost.repaired.frame2::after {
+background-position-x:calc(-70px * 7) !important;
+}
+
+.Akabei.bared {width:105px !important;height:70px}
+.Akabei.bared::before {
+background-position:calc(-70px * 4) 0 !important;
+width:210px !important;height:70px;
+animation:akabei_cf 216ms steps(2) infinite;
+}
+.Akabei.bared.frame2 {
+	left:-6px;
+}
+.Akabei.bared.frame2::before {
+	background-position:calc(-70px * 4 - 105px) 0 !important;
+}
+@keyframes akabei_cf {
+  0% {transform:translate3d(0,0,0)}
+100% {transform:translate3d(-100%,0,0)}
+}

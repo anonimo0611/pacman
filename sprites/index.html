@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="UTF-8">
+	<link rel="icon"       href="icon.svg" type="image/svg+xml">
+	<link rel="preload"    href="../res/sprite.png" as="image">
+	<link rel="stylesheet" href="../styles/maze.css">
+	<link rel="stylesheet" href="../styles/ui.css">
+	<link rel="stylesheet" href="sprites.css">
+	<link rel="stylesheet" href="style.css">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+	<script src="../lib/util.js" defer></script>
+	<script src="../lib/extjq.js"></script>
+	<script src="test.js" type="module"></script>
+	<title>Sprites</title>
+</head>
+
+<body style="background-color:black">
+
+<script>
+const dBody = document.body;
+const SpriteImg = new Image();
+SpriteImg.src = '../res/sprite.png';
+</script>
+
+<form id="slider">
+	<label>Bg brightness:
+		<input type="range" id="bgBrightnessRng" value="0" step="1" min="0" max="50">
+		<output for="bgBrightnessRng">0</output>
+	</label>
+	<label>scale:
+		<input type="range" id="scaleRng" value="100" step="1" min="40" max="140">
+		<output for="scaleRng">100</output>
+	</label>
+	<button type="button" id="resetBtn">Reset</button>
+</form>
+
+<main>
+	<fieldset id="animPreview">
+		<legend>Animation preview</legend>
+		<div class="ctrls">
+			<div class="dropdown menu" id="animSelect">
+				<div class="current menu-focusable center" tabindex="0">——  Select Actor ——</div>
+				<menu class="dropdown-list">
+				<li data-val="default" class="center">——  Select Actor ——</li>
+				<li data-val="Pacman">PAC-MAN</li>
+				<li data-val="Pacman lost prep">PAC-MAN(lost)</li>
+				<li data-val="Akabei ghost">AKABEI</li>
+				<li data-val="Akabei ghost angry">AKABEI(angry)</li>
+				<li data-val="Akabei ghost repaired">AKABEI(repaired)</li>
+				<li data-val="Akabei ghost bared">AKABEI(bared)</li>
+				<li data-val="Pinky  ghost">PINKY</li>
+				<li data-val="Aosuke ghost">AOSUKE</li>
+				<li data-val="Guzuta ghost">GUZUTA</li>
+				<li data-val="ghost fright ghost">Frightened Ghost</li>
+				<li data-val="ghost fright ghost endsoon">Frightened Ghost(flash)</li>
+				</menu>
+			</div>
+			<div class="radioButtons" data-disabled="true">
+				<label><input type="radio" value="L" name="dir" disabled checked>Left</label>
+				<label><input type="radio" value="U" name="dir" disabled>Up</label>
+				<label><input type="radio" value="R" name="dir" disabled>Right</label>
+				<label><input type="radio" value="D" name="dir" disabled>Down</label>
+			</div>
+		</div>
+		<div id="preview"><canvas class="Pacman" id="lost" width="70" height="70"></canvas></div>
+	</fieldset>
+	<div class="sprites">
+		<div class="g">
+			<div class="fruit f1"></div>
+			<div class="fruit f2"></div>
+			<div class="fruit f3"></div>
+			<div class="fruit f4"></div>
+			<div class="fruit f5"></div>
+			<div class="fruit f6"></div>
+			<div class="fruit f7"></div>
+			<div class="fruit f8"></div>
+		</div>
+		<div class="g">
+			<div class="Akabei ghost" data-dir="U"></div>
+			<div class="Akabei ghost frame2" data-dir="U"></div>
+			<div class="Akabei ghost" data-dir="L"></div>
+			<div class="Akabei ghost frame2" data-dir="L"></div>
+			<div class="Akabei ghost" data-dir="D"></div>
+			<div class="Akabei ghost frame2" data-dir="D"></div>
+			<div class="Akabei ghost" data-dir="R"></div>
+			<div class="Akabei ghost frame2" data-dir="R"></div>
+		</div>
+		<div class="g">
+			<div class="Pinky ghost" data-dir="U"></div>
+			<div class="Pinky ghost frame2" data-dir="U"></div>
+			<div class="Pinky ghost" data-dir="L"></div>
+			<div class="Pinky ghost frame2" data-dir="L"></div>
+			<div class="Pinky ghost" data-dir="D"></div>
+			<div class="Pinky ghost frame2" data-dir="D"></div>
+			<div class="Pinky ghost" data-dir="R"></div>
+			<div class="Pinky ghost frame2" data-dir="R"></div>
+		</div>
+		<div class="g">
+			<div class="Aosuke ghost" data-dir="U"></div>
+			<div class="Aosuke ghost frame2" data-dir="U"></div>
+			<div class="Aosuke ghost" data-dir="L"></div>
+			<div class="Aosuke ghost frame2" data-dir="L"></div>
+			<div class="Aosuke ghost" data-dir="D"></div>
+			<div class="Aosuke ghost frame2" data-dir="D"></div>
+			<div class="Aosuke ghost" data-dir="R"></div>
+			<div class="Aosuke ghost frame2" data-dir="R"></div>
+		</div>
+		<div class="g">
+			<div class="Guzuta ghost" data-dir="U"></div>
+			<div class="Guzuta ghost frame2" data-dir="U"></div>
+			<div class="Guzuta ghost" data-dir="L"></div>
+			<div class="Guzuta ghost frame2" data-dir="L"></div>
+			<div class="Guzuta ghost" data-dir="D"></div>
+			<div class="Guzuta ghost frame2" data-dir="D"></div>
+			<div class="Guzuta ghost" data-dir="R"></div>
+			<div class="Guzuta ghost frame2" data-dir="R"></div>
+		</div>
+		<div class="g">
+			<div class="ghost fright"></div>
+			<div class="ghost fright frame2"></div>
+			<div class="ghost fright endsoon"></div>
+			<div class="ghost fright endsoon frame2"></div>
+			<div class="ghost toHouse" data-dir="U"></div>
+			<div class="ghost toHouse" data-dir="L"></div>
+			<div class="ghost toHouse" data-dir="D"></div>
+			<div class="ghost toHouse" data-dir="R"></div>
+		</div>
+		<div class="g">
+			<div class="Pacman"></div>
+			<div class="Pacman frame2" data-dir="U"></div>
+			<div class="Pacman frame3" data-dir="U"></div>
+			<div class="Pacman frame2" data-dir="L"></div>
+			<div class="Pacman frame3" data-dir="L"></div>
+		</div>
+		<div class="g" style="padding-top:.5em">
+			<div class="Pacman frame2" data-dir="D"></div>
+			<div class="Pacman frame3" data-dir="D"></div>
+			<div class="Pacman frame2" data-dir="R"></div>
+			<div class="Pacman frame3" data-dir="R"></div>
+			<div class="dots">
+				<div class="dot"></div>
+				<div class="pow" data-dot="pow"></div>
+			</div>
+		</div>
+		<div class="g">
+			<div class="cb frame1">
+				<div class="Akabei ghost" data-dir="L"></div>
+				<div class="stake"></div>
+				<div class="clothes"></div>
+			</div>
+			<div class="cb frame2">
+				<div class="Akabei ghost" data-dir="L"></div>
+				<div class="stake"></div>
+				<div class="clothes n1"></div>
+			</div>
+			<div class="cb frame3">
+				<div class="Akabei ghost frame2" data-dir="L"></div>
+				<div class="stake"></div>
+				<div class="clothes n2"></div>
+			</div>
+			<div class="Akabei ghost ripped"></div>
+			<div class="Akabei ghost ripped" data-dir="RD"></div>
+			<div class="cb frame4">
+				<div class="stake"></div>
+				<div class="clothes n3"></div>
+			</div>
+		</div>
+		<div class="g">
+			<div class="Akabei ghost repaired cbghs"></div>
+			<div class="Akabei ghost repaired frame2"></div>
+			<div class="Akabei bared"></div>
+			<div class="Akabei bared frame2"></div>
+		</div>
+	</div>
+</main>
+
+</body>
+</html>

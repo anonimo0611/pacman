@@ -1,0 +1,93 @@
+html {
+	margin: 0;
+	padding: 0;
+}
+body {
+	color: white;
+	font-size: 20px;
+	margin: 0 0 0;
+	padding: 2em 1em 1em;
+	opacity: 0;
+	transition: 300ms opacity;
+}
+body {
+	display: flex;
+	justify-content: center;
+	align-items: flex-start;
+}
+main {
+	display: inline-block;
+	transform-origin: center 0;
+	transform:scale(1,1);
+	margin: 0;
+}
+.center {
+	text-align: center;
+}
+
+#slider {
+	line-height: 1;
+	text-align: center;
+	position: fixed;
+	padding: .3em 0 .4em;
+	top: 0; left: 0;
+	z-index: 100;
+	width: 100%;
+	background: rgba(0,0,0,.7);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: .7em;
+}
+#slider label {
+	display: flex;
+	align-items: center;
+}
+#slider label output {
+	text-align: right;
+	font-family: monospace;
+	width: 2em;
+	display: inline-block;
+}
+#slider label output::after {
+	content: '%';
+}
+#slider #resetBtn {
+	margin-left: .6em
+}
+
+#animPreview {
+	position: relative;
+	box-sizing: border-box;
+	margin: 0 0 .5em;
+	padding: 0 10px 13px 0;
+	border-radius: .5em;
+}
+#animPreview legend {margin-left: .5em}
+#animPreview, #animPreview * {font-size: 20px}
+#animPreview div#preview {
+	position: absolute;
+	top: 0 !important;
+	bottom:3px !important;left:10px;
+}
+#animPreview div#preview.Pacman {
+	top: 5px !important;
+}
+#animPreview .radio-buttons {font-family:monospace}
+#animPreview .radio-buttons[data-disabled=true] {color:grayText}
+#animPreview .ctrls {margin-left:120px}
+
+.dropdown-current {
+	background: rgba(59,59,59,.5) !important;
+}
+
+#fc2_footer {
+	position:fixed !important;
+	left:0 !important;
+	bottom:.5em !important;
+	z-index:2000 !important
+}
+#fc2_footer a[href] {
+	color:#6159ff !important;
+	cursor:pointer !important
+}
