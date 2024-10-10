@@ -4,44 +4,38 @@
 	position: relative;
 	overflow: hidden;
 }
-table#mazeGrid {
-	border-collapse: collapse;
-	margin: 0;
-	table-layout: fixed;
-}
-table#mazeGrid::before,
-table#mazeGrid::after {
-	content: '';
-	background: no-repeat center/cover;
-	width:  100%;
-	height: 100%;
-	position: absolute;
-	top:  0;
-	left: 0;
-}
-table#mazeGrid td {
-	font: 0/1 monospace;
-	width:  1rem;
-	height: 1rem;
-}
+#mazeGrid {
+	display: grid;
+	grid-template-columns: repeat(28, 1rem);
+	grid-template-rows: repeat(36, 1rem);
 
-/*--- Background image ---*/
-table#mazeGrid::before {
-	background-image: url('../res/maze.png');
-	z-index: -1;
-	will-change: filter;
-}
-table#mazeGrid::after {
-	background-image: url('../res/grid.png');
+	&::before,
+	&::after {
+		content: '';
+		background: no-repeat center/cover;
+		width:  100%;
+		height: 100%;
+		position: absolute;
+		top:  0;
+		left: 0;
+	}
+	&::before {
+		background-image: url('../res/maze.png');
+		z-index: -1;
+	}
+	&::after {
+		background-image: url('../res/grid.png');
+	}
 }
 [data-grid=false] #mazeGrid::after {
 	visibility: hidden;
 }
 
 /*--- Ghost house's door ---*/
+
 #maze::before {
 	content: '';
-	background: #ffb8de;
+	background: #FFB8DE;
 	width:  2rem;
 	height: 5px;
 	position: absolute;
@@ -53,63 +47,67 @@ table#mazeGrid::after {
 }
 
 /*--- Flashing after completing a level ---*/
+
 @keyframes flash {
-	 0% {filter: grayscale(100%) brightness(3);}
-	50% {filter: unset;}
+	 0% {filter: grayscale(100%) brightness(3)}
+	50% {filter: unset}
 }
-#AteAll [data-door=open] .to_be_flash,
-#AteAll [data-door=open] #mazeGrid::before {
-	animation: flash .5s step-end 4;
-	will-change: filter;
+#AteAll [data-door=open] {
+	#mazeGrid::before,
+	h1, #level, .info li[data-enabled=true] {
+		animation: flash .5s step-end 4;
+	}
 }
 
 /*--- Show points after eating fruit or ghost ---*/
+
 div.pts {
-	color: #3cf;
-	text-shadow: 2px 2px 1px #284b11;
+	color: #3CF;
+	text-shadow: 2px 2px 1px #284B11;
 	font: 1.1rem/1 Digit,sans-serif;
 	position: absolute;
 	top:   0px;
 	left: -2px;
 	z-index: 1500;
 	transform: translate(-1000px,-1000px);
+	&::first-letter {font-size: 110%}
 }
-div.pts::first-letter {
-	font-size: 110%;
-}
-#maze div.pts.pts_ghs {
-	top:  -12px;
-	left: -12px;
-}
-#maze div.pts.pts_fruit {
-	color: #ffb8ff;
-	text-shadow: 2px 2px 1px #600;
-	z-index: 1000;
-	top: 18rem;
-	left: 50%;
-	transform: translateX(calc(-50% - 1px));
+#maze div {
+	&.pts.pts_ghs {
+		top:  -12px;
+		left: -12px;
+	}
+	&.pts.pts_fruit {
+		color: #FFB8FF;
+		text-shadow: 2px 2px 1px #600;
+		z-index: 1000;
+		top: 18rem;
+		left: 50%;
+		transform: translateX(calc(-50% - 1px));
+	}
 }
 #LostLife div.pts {
 	opacity: 0;
 }
 
 /*--- Cookie ---*/
+
 @keyframes pow_blink {
 	50% {opacity: 0;}
 }
+[data-dot] {
+	will-change: background-color, opacity, clip-path;
+}
 [data-dot=normal] {
-	background-color: #ffb491;
+	background-color: #FFB491;
 	clip-path: circle(2.5px at 50% 50%);
-	will-change: background-color,clip-path;
 }
 [data-dot=pow] {
-	background-color: #ffb491;
+	background-color: #FFB491;
 	border-radius: 100%;
 	animation: pow_blink .5s step-end infinite;
-	will-change: opacity;
 }
-.ready    #maze [data-dot=pow],
-#LostLife #maze [data-dot=pow],
-[data-paused=true] [data-dot=pow] {
+[data-paused=true] [data-dot=pow],
+:is(.ready, #LostLife) #maze [data-dot=pow] {
 	animation: none;
 }

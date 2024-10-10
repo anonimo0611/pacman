@@ -6,8 +6,8 @@ html, body {
 	overflow: hidden;
 }
 html {
-	color: #fff;
-	background: #2b2b37;
+	color: #FFF;
+	background: #2B2B37;
 	font-size: 20px;
 	cursor: default;
 	user-select: none;
@@ -42,13 +42,14 @@ small {
 }
 .hypen {
 	visibility: hidden;
-}
-.hypen::after {
-	content: '\A';
-	white-space: pre-wrap;
+	&::after {
+		content: '\A';
+		white-space: pre-wrap;
+	}
 }
 
 /*--- Loading message ---*/
+
 #loading {
 	background: 0 0;
 	font: bolder 4vmin/1 Atari,Verdana;
@@ -60,6 +61,7 @@ small {
 }
 
 /*--- Board container ---*/
+
 #board {
 	background: #000;
 	font: 1rem/1 Atari,sans-serif;
@@ -67,21 +69,21 @@ small {
 	padding: .5rem 0 .1em 0;
 	opacity: 0;
 	transform-origin: center;
-	will-change: transform;
-}
-#board[data-loaded=true] {
-	opacity: 1;
+	&[data-loaded=true] {opacity: 1}
+	pointer-events: none;
 }
 
 /*--- Hide cursor ---*/
+
 [data-cursor=hidden]    #board:not(.title),
 [data-cursor=stayStill] #board:not(.title) {
 	cursor: none;
 }
 
 /*--- Heading and Current level ---*/
+
 h1, #level {
-	color: #ff0;
+	color: #FF0;
 	position: absolute;
 	z-index: 900;
 }
@@ -103,25 +105,28 @@ h1 {
 	font-size: 130%;
 }
 
-.wf-atari h1 {
-	text-transform: lowercase;
-	font: 1.15rem/.5 Pacfont;
-	top:  11.60rem;
-	right: 0.35rem;
-}
-.wf-atari #level {
-	text-align: center;
-	word-spacing: -.1em;
-	width: 10rem;
-	left: .15em;
-	transform: scale(.48,.6);
+.wf-atari {
+	h1 {
+		text-transform: lowercase;
+		font: 1.15rem/0.9 Pacfont;
+		top:  11.50rem;
+		right: 0.35rem;
+	}
+	#level {
+		text-align: center;
+		word-spacing: -.1em;
+		width: 10rem;
+		left: .15em;
+		transform: scale(.48,.6);
+	}
 }
 
 /*--- Start button ---*/
+
 #startBtn {
 	text-align: center;
 	white-space: nowrap;
-	color: #eee;
+	color: #EEE;
 	background: rgba(34,34,34,.7);
 	font: 1rem/1 Atari,sans-serif;
 	border: solid 1px #777;
@@ -133,17 +138,18 @@ h1 {
 	left: 50%;
 	transform: translateX(-50%);
 	transition: color .2s, border-color .2s;
-}
-#startBtn:hover {
-	color: #74ccf8;
-	border-color: currentColor;
-}
-#startBtn:focus {
-	border-width: 2px;
-}
-#startBtn:active {
-	color: #f39;
-	border-color: currentColor;
+
+	&:hover {
+		color: #74CCF8;
+		border-color: currentColor;
+	}
+	&:focus {
+		border-width: 2px;
+	}
+	&:active {
+		color: #F39;
+		border-color: currentColor;
+	}
 }
 .wf-atari #startBtn {
 	font-size: .8rem;
@@ -151,59 +157,92 @@ h1 {
 }
 
 /*--- Board header ---*/
+
 #boardHeader {
 	display: flex;
 	position: absolute;
 	z-index: 700;
 	top:  0.5rem;
 	left: 2.1rem;
+
+	/* Score */
+	dl {
+		margin-right: 1em;
+		display: flex;
+		align-items: center;
+		gap: 1rem;
+	}
+	dd {
+		width: 7em;
+	}
 }
-/* Score */
-#boardHeader dl {
-	margin-right: 1em;
-	display: flex;
-	align-items: center;
-	gap: 1rem;
+[data-prac=true] #hiscoreContainer {
+	* {
+		display: none;
+	}
+	&::before {
+		content: 'PRACTICE';
+	}
 }
-#boardHeader dd {
-	width: 7em;
-}
-[data-prac=true] #hiscoreContainer * {
-	display: none;
-}
-[data-prac=true] #hiscoreContainer::before {
-	content: 'PRACTICE';
-}
+
 /* 1UP */
+
 @keyframes oneUP {
 	50% {opacity: 0;}
 }
 #oneUP {
-	animation: oneUP .7s step-end infinite;
 	will-change: opacity;
+	animation: oneUP .7s step-end infinite;
+	&.flash {
+		color: #FF0F0F;
+		animation-duration: .3s;
+	}
 }
-#oneUP.flash {
-	color: #ff0f0f;
-	animation-duration: .3s;
-}
-#board[data-paused=true] #oneUP,
-body:not(#Ready):not(#Playing) #oneUP {
+body:not(#Ready):not(#Playing) #oneUP,
+#board[data-paused=true] #oneUP {
 	color: unset;
 	animation: none;
 }
 
-/*--- Scene switching ---*/
-[data-loaded=true] #titleScr, #ready {
+/*--- Title screen ---*/
+
+[data-loaded=true] #titleScr {
 	display: none;
 }
-#Title #titleScr,
-#Ready #ready {
+#Title #titleScr {
 	display: block;
+	pointer-events: auto;
+}
+
+/*--- Ready scene ---*/
+
+#ready {
+	text-align: center;
+	z-index: 1100;
+	opacity: 0;
+	> li {
+		position: absolute;
+		left: 50%;
+		transform: translateX(-50%);
+	}
+	> li.player1 {
+		color: #0FF;
+		opacity: 0;
+		top: 12.05rem;
+	}
+}
+#Ready #ready,
+.start #ready > li.player1 {
+	opacity: 1;
+}
+.wf-atari :is(#ready > li, .message)  {
+	left: calc(50% + .05em) !important;
 }
 
 /*--- Message under the ghost house ---*/
+
 .message {
-	color: #ff0;
+	color: #FF0;
 	display: block;
 	top: 18.05rem;
 }
@@ -215,35 +254,9 @@ body:not(#Ready):not(#Playing) #oneUP {
 	left: 50%;
 	transform: translateX(-50%);
 }
-#message:empty {
-	display: none;
-}
-
-/*--- Ready scene ---*/
-#ready {
-	text-align: center;
-	z-index: 1100;
-}
-#ready > li {
-	position: absolute;
-	left: 50%;
-	transform: translateX(-50%);
-}
-#ready > li.player1 {
-	color: #0ff;
-	display: none;
-	top: 12.05rem;
-}
-.start #ready > li.player1 {
-	display: block;
-}
-
-.wf-atari #ready > li,
-.wf-atari .message {
-	left: calc(50% + .05em) !important;
-}
 
 /*--- Board Footer ---*/
+
 #boardFooter {
 	width: 100%;
 	position: absolute;
@@ -251,7 +264,9 @@ body:not(#Ready):not(#Playing) #oneUP {
 	bottom: 2rem;
 	left: 0;
 }
+
 /* Lives, Fruit counter */
+
 #lives, #fruits {
 	display: flex;
 	position: absolute;
@@ -265,6 +280,7 @@ body:not(#Ready):not(#Playing) #oneUP {
 }
 
 /*--- Target tiles ---*/
+
 #targetTiles {
 	width:  28rem;
 	height: 33rem;
@@ -272,18 +288,4 @@ body:not(#Ready):not(#Playing) #oneUP {
 	z-index: 2000;
 	top: calc(1rem - 1px);
 	left: 0;
-}
-
-/*--- fc2 ---*/
-img[width="0"][height="0"] {
-	float: right;
-}
-#fc2_footer {
-	position: fixed;
-	z-index: 2000;
-	left:   0;
-	bottom: 0;
-}
-#fc2_footer a[href] {
-	color: #6159ff !important;
 }
