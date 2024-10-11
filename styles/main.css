@@ -69,8 +69,8 @@ small {
 	padding: .5rem 0 .1em 0;
 	opacity: 0;
 	transform-origin: center;
-	&[data-loaded=true] {opacity: 1}
 	pointer-events: none;
+	&[data-loaded=true] {opacity: 1}
 }
 
 /*--- Hide cursor ---*/

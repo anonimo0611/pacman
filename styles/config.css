@@ -285,6 +285,7 @@
 	z-index: 20000;
 	top:  -.8rem;
 	right: .1rem;
+	pointer-events: auto;
 	&:hover input {
 		visibility: visible;
 		opacity: 1;
