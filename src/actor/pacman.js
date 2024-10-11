@@ -37,7 +37,7 @@ export const Pacman = new class {
 	}
 	#keydown(e) {
 		const dir = Dir.from(e.code, {awsd:true})
-		if (Confirm.opened || !dir || e.repeat)
+		if (Confirm.opened || !dir || e.originalEvent.repeat)
 			return
 		if (Scene.isPlaying && dir == pac.preDir)
 			return
