@@ -379,10 +379,10 @@ body:not(#Playing) #targetTiles,
 	}
 	&::after {
 		background-position-x: calc(-42px*4);
-		transform: translate(0, -42px);
+		transform: translateX(0);
 	}
 	&.last::after {
-		transform: translate(-42px, -42px);
+		transform: translateX(-42px);
 	}
 }
 .ghs:not(.ripped).stopped::before {
