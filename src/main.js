@@ -30,17 +30,18 @@ export const Status = new class {
 			return void Status.#setScore(0)
 		restored
 			? Status.#setHiScore(highScore)
-			: Status.#whenEndGame(highScore)
+			: Status.#whenGameEnds(highScore)
 		Status.#savedScore = Status.#score
 		Status.#savedHigh  = Status.#highScore
 		Form.lvsRng.trigger('input')
 	}
-	#whenEndGame(highScore) {
+	#whenGameEnds(highScore) {
 		if (Scene.isQuit) {
 		    Status.#setScore(Status.#savedScore)
 		    Status.#setHiScore(Status.#savedHigh)
+		    return
 		}
-		else if (Status.#highScore > highScore) {
+		if (Status.#highScore > highScore) {
 			localStorage.anopac_hiscore = Status.#highScore
 		}
 	}
