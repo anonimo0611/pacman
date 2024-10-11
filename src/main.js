@@ -25,7 +25,7 @@ export const Status = new class {
 	set message(txt) {Form.message.value = txt ?? ''}
 	setGameOverMsg() {Form.message.value = 'GAME　　OVER'}
 	#reset(restored=false) {
-		const highScore = localStorage.anopac_hiscore
+		const highScore = localStorage.anopac_hiscore || 0
 		if (Scene.isStart)
 			return void Status.#setScore(0)
 		restored
