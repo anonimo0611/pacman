@@ -71,7 +71,7 @@ export const Maze = new class _Maze {
 	TileSize  = TILE
 	Lines     = MAP_DATA.split('\n')
 	DotMax    = MAP_DATA.match(/[.O]/g).length
-	dTable    = makeElm('div#mazeGrid')
+	dGrid     = makeElm('div#mazeGrid')
 	ColMax    = this.Lines[0].length
 	Width     = (this.ColMax)   * TILE
 	Center    = (this.Width/2)  - TILE/2 + .5
@@ -87,14 +87,14 @@ export const Maze = new class _Maze {
 		$on('Respawn End', _Maze.spawnObjs)
 		$on('DotEaten', _=> Maze.#dotsLeft--)
 		Form.powChk.on('change', Maze.#powDotsToggle)
-		Maze.dTable.prependTo(dMaze)
+		Maze.dGrid.prependTo(dMaze)
 		Maze.Lines.forEach((line, y)=> {
 			Array.from(line).forEach((maptip, x)=> {
 				const [tile,dx,dy]= [makeDiv(),TILE*x,TILE*y]
 				const [hasDoor,hasWall]=[(maptip == '-'), /[#-]/.test(maptip)]
 				Maze.#Tiles.push(tile)
 				maptip == 'O' && (tile.dataset.role = 'pow')
-				tile.readOnly({x,y,dx,dy,hasDoor,hasWall}).appendTo(Maze.dTable)
+				tile.readOnly({x,y,dx,dy,hasDoor,hasWall}).appendTo(Maze.dGrid)
 			});
 		});_Maze.spawnObjs()
 	}
@@ -131,8 +131,10 @@ export const Maze = new class _Maze {
 		return Maze.#Tiles[y*Maze.ColMax+x] || null;
 	}
 	adjacent(dir, {y=0, x=0}={}) {
-		return Dir.isValid(dir) && ({y, x}=Dir.toVec2(dir, 1, {y, x}))
-			&& Maze.getTile({y, x:(x+Maze.ColMax) % Maze.ColMax}) || null
+		return Dir.isValid(dir)
+			&& ({y, x}=Dir.toVec2(dir, 1, {y, x}))
+			&& Maze.getTile({y, x:(x+Maze.ColMax) % Maze.ColMax})
+				|| null
 	}
 	loopX({width,trPos,left=0}) {
 		if (trPos.x < -width-left) trPos.x = Maze.Width-left
@@ -140,7 +142,7 @@ export const Maze = new class _Maze {
 		return trPos
 	}
 	#powDotsToggle() {
-		for (const tile of Maze.dTable.find('[data-role=pow]'))
+		for (const tile of Maze.dGrid.find('[data-role=pow]'))
 			tile.prop({hasDot:true}).data({dot:this.checked? 'pow':'normal'})
 	}
 }; deepFreeze(Maze)
