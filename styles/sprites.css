@@ -2,6 +2,7 @@ div {
 	--bg: url(../res/sprite.png);
 	background-repeat: no-repeat !important;
 }
+td.ghs,
 .actor,
 .actor::before,
 .actor::after,
@@ -137,6 +138,7 @@ body:not(#Playing):not(.Demo) .Pacman::before {
 	width:  42px;
 	height: 42px;
 	z-index: 1005;
+	display: inline-block;
 	overflow: hidden;
 	
 	&::before,
@@ -169,7 +171,6 @@ body:not(#Playing):not(.Demo) .Pacman::before {
 	background-position-y: -42px;
 	width: calc(42px*4);
 }
-table#characters td.ghs::after,
 .ghs[data-orient=Up]::after    {transform: translateX(0)}
 .ghs[data-orient=Right]::after {transform: translateX(-42px)}
 .ghs[data-orient=Down]::after  {transform: translateX(calc(-42px*2))}
