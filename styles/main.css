@@ -11,6 +11,7 @@ html {
 	font-size: 20px;
 	cursor: default;
 	user-select: none;
+	-webkit-user-select: none;
 }
 body {
 	font: 700 1rem/1 Verdana,sans-serif;
@@ -75,9 +76,11 @@ small {
 
 /*--- Hide cursor ---*/
 
-[data-cursor=hidden]    #board:not(.title),
-[data-cursor=stayStill] #board:not(.title) {
-	cursor: none;
+[data-cursor=hidden],
+[data-cursor=stayStill] {
+	#board:not(.title) {
+		cursor: none;
+	}
 }
 
 /*--- Heading and Current level ---*/
@@ -100,9 +103,9 @@ h1 {
 	left: 0.2em;
 	transform: scale(.7);
 	transform-origin: 0 center;
-}
-#level::first-letter, #levelNum {
-	font-size: 130%;
+	&::first-letter, #levelNum {
+		font-size: 130%;
+	}
 }
 
 .wf-atari {
@@ -198,10 +201,12 @@ h1 {
 		animation-duration: .3s;
 	}
 }
-body:not(#Ready):not(#Playing) #oneUP,
-#board[data-paused=true] #oneUP {
-	color: unset;
-	animation: none;
+#board[data-paused=true],
+body:not(#Ready):not(#Playing) {
+	#oneUP {
+		color: unset;
+		animation: none;
+	}
 }
 
 /*--- Title screen ---*/
@@ -263,20 +268,19 @@ body:not(#Ready):not(#Playing) #oneUP,
 	z-index: 700;
 	bottom: 2rem;
 	left: 0;
-}
 
-/* Lives, Fruit counter */
-
-#lives, #fruits {
-	display: flex;
-	position: absolute;
-}
-#lives {
-	margin: .2em 0 0 2.2rem;
-}
-#fruits {
-	right: 2rem;
-	flex-direction: row-reverse;
+	#lives, #fruits {
+		display: flex;
+		position: absolute;
+	}
+	#lives {
+		margin: .2em 0 0 2.2rem;
+		div {transform: scale(1.1)}
+	}
+	#fruits {
+		right: 2rem;
+		flex-direction: row-reverse;
+	}
 }
 
 /*--- Target tiles ---*/

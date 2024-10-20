@@ -292,9 +292,3 @@ label:hover {
 	border-color: #0B93D5;
 	outline: 0;
 }
-.slidemenu:focus
-	.slidemenu-btn:not(:disabled),
-.slidemenu-wrapper:hover
-	.slidemenu-btn:not(:disabled) {
-	opacity: 1;
-}

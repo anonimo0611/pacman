@@ -6,6 +6,7 @@ import {Game}         from './main.js'
 import {Scene}        from './scene.js'
 import {Ctrl}         from './control.js'
 import {FrightMode}   from './actor/ghost.js'
+import {dBoard,dCB}   from './elems.js'
 import {dPac,dAka,GhsElms} from './actor/actelem.js'
 
 (new class { // The attract demo begins after 30 seconds of inactivity
@@ -35,7 +36,7 @@ import {dPac,dAka,GhsElms} from './actor/actelem.js'
 const Demo = new class {
 	begin() {
 		Scene.switch('Demo', Demo.#setup)
-		const elms = [...byId('demo').find('thead,td,.bonusGuide')]
+		const elms = [...byId('demo').find('thead, td, .bonusGuide')]
 		Ticker.set(_=> {
 			if (Ticker.count % (elms[0]?.cellIndex ? 30 : 60) != 0)
 				return
@@ -44,8 +45,8 @@ const Demo = new class {
 		})
 	}
 	#setup() {
-		dBody.className = dBody.id
-		dqs('#demo_temp').appendTo(dBoard)
+		document.body.className = document.body.id
+		dqs('#demo_temp').appendTo(document.body)
 		Ctrl.extendVal < 0
 			? dqs('#demo .aboutExtend').remove()
 			: dqs('#demo .extendScore').text(Ctrl.extendVal)
@@ -107,7 +108,7 @@ export class Cutscene {
 		return !!new Cutscene(this.#symbol, num)
 	}
 	static #setup() {
-		dBody.className = 'Demo CB'
+		document.body.className = 'Demo CB'
 		dqs('#coffeeBreak_temp').appendTo(dCB)
 	}
 	constructor(symbol, snum) {

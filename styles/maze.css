@@ -72,12 +72,12 @@ div.pts {
 	transform: translate(-1000px,-1000px);
 	&::first-letter {font-size: 110%}
 }
-#maze div {
-	&.pts.pts_ghs {
+#maze div.pts {
+	&.pts_ghs {
 		top:  -12px;
 		left: -12px;
 	}
-	&.pts.pts_fruit {
+	&.pts_fruit {
 		color: #FFB8FF;
 		text-shadow: 2px 2px 1px #600;
 		z-index: 1000;

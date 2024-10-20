@@ -11,6 +11,7 @@ import {Ghost}        from './actor/ghost.js'
 import {TargetTile}   from './actor/target.js'
 import {Cutscene}     from './cutscene.js'
 import {LevelMenu}    from './menu.js'
+import {dBoard,dMaze,dFruits,dLives,d1UP} from './elems.js'
 
 export const Status = new class {
 	static {
@@ -190,7 +191,7 @@ export const Game = new class {
 		}
 	}
 	#end() {
-		dBody.removeAttr('id','class')
+		document.body.removeAttr('id','class')
 		dBoard.dataset.paused = false
 		dBoard.dataset.frozen = false
 		Ticker.stop() && Sound.stop()

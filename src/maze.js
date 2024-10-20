@@ -3,6 +3,7 @@ import {Timer}         from '../lib/timer.js'
 import {Dir,U,L,D,R,C} from '../lib/direction.js'
 import {Form}          from './control.js'
 import {Status,Game}   from './main.js'
+import {dBoard,dMaze,dFruit} from './elems.js'
 
 const MAP_DATA = `\
 ############################

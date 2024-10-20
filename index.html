@@ -29,7 +29,6 @@
 	</script>
 	<script src="lib/util.js"></script>
 	<script src="lib/extjq.js"></script>
-	<script src="src/elems.js" defer></script>
 	<script src="src/main.js" type="module"></script>
 </head>
 
@@ -123,13 +122,13 @@
 				</ul>
 				<ul class="buttons">
 					<li><button type="button" id="clearStorageBtn">Clear Storage</button></li>
-					<li><button type="button" id="keyBtn" class="keyPanel">About Keys</button></li>
+					<li><button type="button" id="keysBtn" class="panelBtn keysPanel">About Keys</button></li>
 				</ul>
 				<div id="size" class="toRestore">
 					<button type="button" title="Fit to viewport">Fit</button>
 					<button type="button" title="Restore actual size">Restore</button>
 				</div>
-				<button type="button" id="cfgBtn" class="cfgPanel" title="More configuration">More configuration...</button>
+				<button type="button" id="cfgBtn" class="panelBtn cfgPanel" title="More configuration">More configuration...</button>
 			</div>
 			<div id="cfgPanel" class="cfgPanel panel">
 				<table>
@@ -196,7 +195,7 @@
 				</tr>
 				</table>
 			</div>
-			<div id="keysPanel" class="keyPanel panel">
+			<div id="keysPanel" class="keysPanel panel">
 				<table>
 				<caption>Keys</caption>
 				<tr class="volCtrl">

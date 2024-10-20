@@ -1,4 +1,6 @@
+import {dFruit} from './elems.js'
 import * as MenuBase from '../lib/menu.js'
+
 export const LevelMenu = new class extends MenuBase.DorpDownMenu {
 	constructor() {
 		super('LevelMenu')
@@ -12,7 +14,9 @@ export const LevelMenu = new class extends MenuBase.DorpDownMenu {
 	}
 }
 export const ExtendScoreMenu = new class extends MenuBase.SlideMenu {
-	constructor() {super('ExtendScoreMenu')}
+	constructor() {
+		super('ExtendScoreMenu')
+	}
 	select(idx, {restore=false}={}) {
 		super.select(idx)
 		!restore && $trigger('SaveData')

@@ -162,11 +162,13 @@ table#characters {
 	[data-dot=pow] {
 		animation-delay: .5s;
 	}
-	.standbyAnim #demoAnim {
-		opacity: 0;
-	}
-	.standbyAnim [data-dot=pow] {
-		animation: none;
+	.standbyAnim {
+		#demoAnim {
+			opacity: 0;
+		}
+		[data-dot=pow] {
+			animation: none;
+		}
 	}
 	.aboutExtend {
 		color: orange;

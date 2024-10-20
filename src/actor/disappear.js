@@ -1,4 +1,5 @@
-import {Ticker} from '../../lib/timer.js';
+import {Ticker}    from '../../lib/timer.js';
+import {SpriteImg} from '../elems.js';
 
 const cvs  = byId('lost')
 const ctx  = cvs.getContext('2d')

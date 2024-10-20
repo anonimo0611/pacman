@@ -1,8 +1,9 @@
-import {Dir}       from '../lib/direction.js'
-import {Confirm}   from '../lib/confirm.js'
-import {Status}    from './main.js'
-import {LevelMenu} from './menu.js'
-import * as Menu   from './menu.js'
+import {Dir}          from '../lib/direction.js'
+import {Confirm}      from '../lib/confirm.js'
+import {Status}       from './main.js'
+import {LevelMenu}    from './menu.js'
+import {dBoard,dSize} from './elems.js'
+import * as Menu      from './menu.js'
 
 export const Ctrl = new class {
 	static {$one('BoardLoaded', this.setup)}
@@ -14,7 +15,9 @@ export const Ctrl = new class {
 		$on('SaveData', Ctrl.#saveData)
 		$on('ChgLevel', Ctrl.#setDataToHTML)
 	}
+
 	dirFrom = e=> Dir.from(e?.code, {awsd:true}) || null
+
 	#fitToViewport() {
 		const scale = (dRoot.dataset.size == 'viewport')
 			? min(innerWidth/dBoard.width*.98, innerHeight/dBoard.height)
@@ -82,8 +85,6 @@ export const Ctrl = new class {
 		dqs('#unrInfo').dataset.enabled = Ctrl.unrestricted
 	}
 	#setupFormCtrls() {
-		Form.cfgBtn.on('click', _=> $(dCfgP).toggle())
-		Form.keyBtn.on('click', _=> $(dKeys).toggle())
 		Form.clearStorageBtn.on('click', _=> {
 			Confirm.open('Are you sure you want to clear local storage?',
 				null, Ctrl.#removeData, 'No','Yes', {putCancelOnLeft:true})
@@ -94,10 +95,13 @@ export const Ctrl = new class {
 			dSize.attr('class',`to${btn.textContent}`) && btn.focus()
 			Ctrl.#saveData().#fitToViewport()
 		})
+		dqsAll('.panelBtn').forEach(btn=> {
+			const id = btn.classList.item(1)
+			$(btn).on('click', _=> $('.panel').toggle())
+			$on('click', e=> {!e.target.closest(`.${id}`) && $(`#${id}`).hide()})
+		})
 		$('input').on('input change', Ctrl.#saveData)
 		$('#defBtn').on('click', Ctrl.#setDefault)
 		$('.setInf').on('input', Ctrl.#setDataToHTML)
-		$on('click', e=> {!e.target.closest('.cfgPanel') && $(dCfgP).hide()})
-		$on('click', e=> {!e.target.closest('.keyPanel') && $(dKeys).hide()})
 	}
 }, Form = document.forms[0]

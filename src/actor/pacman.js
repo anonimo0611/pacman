@@ -41,7 +41,8 @@ export const Pacman = new class {
 			return
 		if (Scene.isPlaying && dir == pac.preDir)
 			return
-		if (Scene.isReady) pac.preDir = dir
+		if (Scene.isReady)
+			pac.preDir = dir
 		if (Scene.some('Ready|Playing'))
 			adj(dir,pac).hasWall
 				? (pac.preDir=dir)

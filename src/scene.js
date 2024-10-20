@@ -25,7 +25,7 @@ export const Scene = freeze(new class {
 	switch(scene, fn, ...args) {
 		if (!this.#enumSet.has(scene))
 			throw ReferenceError(`Scene '${scene}' is not defined`)
-		$trigger('Switching') && dBody.attr('id', this.#scene=scene)
+		$trigger('Switching') && document.body.attr('id', this.#scene=scene)
 		isFun(fn) && fn(...args), $trigger(scene)
 	}
 })

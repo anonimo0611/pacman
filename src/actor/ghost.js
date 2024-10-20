@@ -1,6 +1,7 @@
 import {Sound}         from '../../snd/sound.js'
 import {Dir,U,L,D,R,C} from '../../lib/direction.js'
 import {Ticker,Timer}  from '../../lib/timer.js'
+import {dBoard}        from '../elems.js'
 import {Status,Game}   from '../main.js'
 import {Scene}         from '../scene.js'
 import {Ctrl}          from '../control.js'
