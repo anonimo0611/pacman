@@ -225,19 +225,19 @@ body:not(#Ready):not(#Playing) {
 	text-align: center;
 	z-index: 1100;
 	opacity: 0;
-	> li {
+	> div {
 		position: absolute;
 		left: 50%;
 		transform: translateX(-50%);
 	}
-	> li.player1 {
+	> .player1 {
 		color: #0FF;
 		opacity: 0;
 		top: 12.05rem;
 	}
 }
 #Ready #ready,
-.start #ready > li.player1 {
+.start #ready > .player1 {
 	opacity: 1;
 }
 .wf-atari :is(#ready > li, .message)  {

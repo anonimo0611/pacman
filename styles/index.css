@@ -4,3 +4,10 @@
 @import url(demo.css);
 @import url(ui.css);
 @import url(config.css);
+
+#debug {
+	position: fixed;
+	top:  .5em;
+	left: .5em;
+	white-space: pre;
+}

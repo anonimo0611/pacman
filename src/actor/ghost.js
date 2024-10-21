@@ -38,7 +38,7 @@ const compareDist = (a, b)=>
 const Waves = new class { // Alternate between scatter and chase modes
 	#mode = WaveType.Scatter;
 	get isChase()   {return this.#mode == WaveType.Chase}
-	get isScatter() {return this.#mode == WaveType.Scatter}
+	get isScatter() {return this.#mode == WaveType.Scatter && !Ctrl.isChaseMode}
 	set(lv=Game.level) {
 		const TimeList = [ // ms
 			lv <= 4 ? 4500 : 3500, 
