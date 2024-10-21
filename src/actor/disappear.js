@@ -1,8 +1,9 @@
 import {Ticker} from '../../lib/timer.js';
 
-const cvs  = byId('lost')
-const ctx  = cvs.getContext('2d')
-const SIZE = cvs.width
+const cvs    = byId('lost')
+const ctx    = cvs.getContext('2d')
+const SIZE   = cvs.width
+const RADIUS = SIZE/2 * 0.9142
 const DIS_DURATION  = 1149/Ticker.FPeriod
 const LINE_DURATION =  300/Ticker.FPeriod
 const LINE_FADEOUT  =  300/Ticker.FPeriod
@@ -40,10 +41,10 @@ export class Disappear {
 		ctx.save()
 		ctx.translate(SIZE/2, SIZE/2)
 		ctx.beginPath()
-		ctx.moveTo(0,SIZE/6)
-		ctx.arc(0,0, SIZE/2*1.2, -PI/2-angle,-PI/2+angle, true)
-		ctx.clip()
-		ctx.drawImage(SpriteImg, -SIZE/2,-SIZE/2)
+		ctx.moveTo(0, SIZE/6)
+		ctx.arc(0,0, RADIUS, -PI/2-angle,-PI/2+angle, true)
+		ctx.fillStyle = 'yellow';
+		ctx.fill()
 		ctx.restore()
 	}
 	#drawLines() {
