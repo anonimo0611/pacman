@@ -24,8 +24,6 @@
 	@font-face {font-family:Pacfont;src:url(res/PacfontGood.woff2) format('woff2')}
 	</style>
 	<script>
-	const SpriteImg = new Image()
-	SpriteImg.src = 'res/sprite.png'
 	WebFont.load({custom:{families:['Atari']},fontactive:_=> $(':root').addClass('wf-atari')})
 	createjs.deprecate = method=> function(){return method && method.apply(this,arguments)}
 	</script>
