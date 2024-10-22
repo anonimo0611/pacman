@@ -153,7 +153,7 @@ body:not(#Playing):not(.Demo) .Pacman::before {
 	&.Aosuke::before {background-position-x: calc(-42px*5);}
 	&.Guzuta::before {background-position-x: calc(-42px*7);}
 
-	&.fright  {z-index: 1001}
+	&.fright  {z-index: 1001 !important}
 	&.Guzuta  {z-index: 1004}
 	&.Aosuke  {z-index: 1006}
 	&.Pinky	  {z-index: 1008}
