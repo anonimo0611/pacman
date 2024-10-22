@@ -46,7 +46,7 @@ const Demo = new class {
 	}
 	#setup() {
 		document.body.className = document.body.id
-		dqs('#demo_temp').appendTo(document.body)
+		dqs('#demo_temp').appendTo(dBoard)
 		Ctrl.extendVal < 0
 			? dqs('#demo .aboutExtend').remove()
 			: dqs('#demo .extendScore').text(Ctrl.extendVal)
