@@ -10,7 +10,8 @@
 	display: none;
 }
 .Demo :is(#maze, #lives),
-.CB :is(#boardHeader, .title #boardFooter) {
+.CB :is(#boardHeader,
+.title #boardFooter) {
 	visibility: hidden;
 }
 
