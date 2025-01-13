@@ -36,7 +36,7 @@ export const Pacman = new class {
 		pac.setPos({x:pac.initX+int(pac.movDir == R)})
 	}
 	#keydown(e) {
-		const dir = Dir.from(e.code, {awsd:true})
+		const dir = Dir.from(e.code, {wasd:true})
 		if (Confirm.opened || !dir || e.originalEvent.repeat)
 			return
 		if (Scene.isPlaying && dir == pac.preDir)
