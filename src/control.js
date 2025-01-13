@@ -16,7 +16,7 @@ export const Ctrl = new class {
 		$on('ChgLevel', Ctrl.#setDataToHTML)
 	}
 
-	dirFrom = e=> Dir.from(e?.code, {awsd:true}) || null
+	dirFrom = e=> Dir.from(e?.code, {wasd:true}) || null
 
 	#fitToViewport() {
 		const scale = (dRoot.dataset.size == 'viewport')
