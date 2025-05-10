@@ -113,7 +113,7 @@ const Elroy = new class { // "Akabei" accelerate three times in each level
 	dotEaten() {
 		const elroyP2 = this.#dotsLeftP2List[Game.clampedLv-1]
 		const speedUp = _=> {++this.#part,Sound.playSiren()}
-		if (Maze.dotsLeft <= elroyP2*([15,10,50][this.part]/10))
+		if (Maze.dotsLeft <= elroyP2*([15,10,5][this.part]/10))
 			speedUp()
 	}
 	reset() {if (!Game.restarted) this.#part = 0}
